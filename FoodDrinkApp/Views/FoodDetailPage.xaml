@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FoodDrinkApp.Views.FoodDetailPage"
+             Title="{Binding Name}"
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
+    <ScrollView>
+        <VerticalStackLayout Spacing="0">
+            <Frame HeightRequest="200" CornerRadius="0" HasShadow="False" BackgroundColor="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}" Padding="0">
+                <Label Text="Food Detail" FontSize="30" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" Opacity="0.5"/>
+            </Frame>
+            <Frame Margin="16,-40,16,16" CornerRadius="20" HasShadow="True" BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}" Padding="20">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="{Binding Name}" FontSize="Title" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource TextPrimaryLight}, Dark={StaticResource TextPrimaryDark}}"/>
+                    <Label Text="{Binding Category}" FontSize="Subtitle" TextColor="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}"/>
+                    <Frame CornerRadius="12" BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}" Padding="16,12">
+                        <Grid ColumnDefinitions="*,*,*,*">
+                            <VerticalStackLayout HorizontalOptions="Center">
+                                <Label Text="Star" FontSize="14"/>
+                                <Label Text="{Binding Rating, StringFormat='{}{0:F1}'}" FontSize="Body" FontAttributes="Bold" HorizontalOptions="Center"/>
+                                <Label Text="Rating" FontSize="Caption" Opacity="0.7"/>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+                                <Label Text="Time" FontSize="14"/>
+                                <Label Text="{Binding PrepTimeMinutes, StringFormat='{}{0} min'}" FontSize="Body" FontAttributes="Bold" HorizontalOptions="Center"/>
+                                <Label Text="Prep Time" FontSize="Caption" Opacity="0.7"/>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
+                                <Label Text="Cal" FontSize="14"/>
+                                <Label Text="{Binding Calories}" FontSize="Body" FontAttributes="Bold" HorizontalOptions="Center"/>
+                                <Label Text="Calories" FontSize="Caption" Opacity="0.7"/>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center">
+                                <Label Text="Origin" FontSize="14"/>
+                                <Label Text="{Binding Origin}" FontSize="Body" FontAttributes="Bold" HorizontalOptions="Center"/>
+                                <Label Text="Country" FontSize="Caption" Opacity="0.7"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Frame>
+                    <Label Text="Description" FontSize="Subtitle" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}"/>
+                    <Label Text="{Binding Description}" FontSize="Body" LineBreakMode="WordWrap" TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+                    <Label Text="Details" FontSize="Subtitle" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}"/>
+                    <Label Text="{Binding Details}" FontSize="Body" LineBreakMode="WordWrap" TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+                    <Label Text="Ingredients" FontSize="Subtitle" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}"/>
+                    <Frame CornerRadius="12" BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}" Padding="16,12">
+                        <Label x:Name="IngredientsLabel" FontSize="Body" LineBreakMode="WordWrap" TextColor="{AppThemeBinding Light={StaticResource TextSecondaryLight}, Dark={StaticResource TextSecondaryDark}}"/>
+                    </Frame>
+                    <Button Text="Scan with Camera" Style="{StaticResource PrimaryButtonStyle}" HeightRequest="50" Clicked="OnCameraClicked"/>
+                    <Button Text="Find Nearby Restaurants" Style="{StaticResource SecondaryButtonStyle}" HeightRequest="50" Clicked="OnLocationClicked"/>
+                    <Button Text="Read Recipe Aloud" Style="{StaticResource SecondaryButtonStyle}" HeightRequest="50" Clicked="OnTTSClicked"/>
+                </VerticalStackLayout>
+            </Frame>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

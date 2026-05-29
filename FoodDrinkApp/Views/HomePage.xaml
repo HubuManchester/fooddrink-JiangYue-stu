@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:FoodDrinkApp.Models"
+             x:Class="FoodDrinkApp.Views.HomePage"
+             Title="Food Finder"
+             BackgroundColor="White">
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto,Auto,*,Auto">
+            <Frame Grid.Row="0" Margin="16,12" Padding="8" CornerRadius="25" HasShadow="True" BackgroundColor="White">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Label Text="Search" FontSize="20" VerticalOptions="Center" Margin="8,0"/>
+                    <Entry Grid.Column="1" Placeholder="Search food, cuisine..." Text="{Binding SearchText}" FontSize="Body" VerticalOptions="Center" BackgroundColor="Transparent"/>
+                </Grid>
+            </Frame>
+            <ScrollView Grid.Row="1" Orientation="Horizontal" Margin="16,0" HorizontalScrollBarVisibility="Never">
+                <StackLayout Orientation="Horizontal" Spacing="10">
+                    <Button Text="All" Command="{Binding ClearFiltersCommand}" Style="{StaticResource CategoryButtonStyle}"/>
+                    <Button Text="Appetizer" Command="{Binding ApplyFilterCommand}" CommandParameter="Appetizer" Style="{StaticResource CategoryButtonStyle}"/>
+                    <Button Text="Main Course" Command="{Binding ApplyFilterCommand}" CommandParameter="Main Course" Style="{StaticResource CategoryButtonStyle}"/>
+                    <Button Text="Dessert" Command="{Binding ApplyFilterCommand}" CommandParameter="Dessert" Style="{StaticResource CategoryButtonStyle}"/>
+                    <Button Text="Drinks" Command="{Binding ApplyFilterCommand}" CommandParameter="Drink" Style="{StaticResource CategoryButtonStyle}"/>
+                </StackLayout>
+            </ScrollView>
+            <CollectionView Grid.Row="2" ItemsSource="{Binding FilteredItems}" SelectionMode="None" BackgroundColor="#F5F5F5" Margin="16,12">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:FoodItem">
+                        <Frame CornerRadius="16" HasShadow="True" Margin="0,0,0,12" Padding="16" BackgroundColor="White" HeightRequest="120">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnItemTapped" CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+                            <Grid ColumnDefinitions="80,*" RowDefinitions="Auto,Auto,Auto">
+                                <Frame Grid.Column="0" Grid.RowSpan="3" WidthRequest="80" HeightRequest="80" CornerRadius="12" BackgroundColor="#FF6B35" Opacity="0.15" VerticalOptions="Center">
+                                    <Label Text="Food" FontSize="14" HorizontalOptions="Center" VerticalOptions="Center" TextColor="#FF6B35"/>
+                                </Frame>
+                                <Label Grid.Column="1" Grid.Row="0" Text="{Binding Name}" FontSize="Subtitle" FontAttributes="Bold" TextColor="Black"/>
+                                <StackLayout Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Margin="0,4,0,0">
+                                    <Label Text="Rating: " FontSize="13" TextColor="Gray"/>
+                                    <Label Text="{Binding Rating, StringFormat='{}{0:F1}'}" FontSize="13" TextColor="Gray"/>
+                                    <Label Text="  |  " FontSize="13" Opacity="0.5"/>
+                                    <Label Text="{Binding Origin}" FontSize="13" TextColor="Gray"/>
+                                </StackLayout>
+                                <Label Grid.Column="1" Grid.Row="2" Text="{Binding Description}" FontSize="Body" LineBreakMode="TailTruncation" MaxLines="2" TextColor="Gray" Margin="0,4,0,0"/>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Frame Grid.Row="3" Margin="16" CornerRadius="16" HasShadow="True" BackgroundColor="#FF6B35" Padding="16,12">
+                <Grid ColumnDefinitions="*,*,*,*">
+                    <StackLayout Grid.Column="0" HorizontalOptions="Center">
+                        <Label Text="{Binding FilteredItems.Count}" FontSize="Title" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+                        <Label Text="Items" FontSize="Caption" TextColor="White" Opacity="0.8" HorizontalOptions="Center"/>
+                    </StackLayout>
+                    <StackLayout Grid.Column="1" HorizontalOptions="Center">
+                        <Label Text="4.6" FontSize="Title" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+                        <Label Text="Avg Rating" FontSize="Caption" TextColor="White" Opacity="0.8" HorizontalOptions="Center"/>
+                    </StackLayout>
+                    <StackLayout Grid.Column="2" HorizontalOptions="Center">
+                        <Label Text="6" FontSize="Title" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+                        <Label Text="Cuisines" FontSize="Caption" TextColor="White" Opacity="0.8" HorizontalOptions="Center"/>
+                    </StackLayout>
+                    <StackLayout Grid.Column="3" HorizontalOptions="Center">
+                        <Label Text="Low" FontSize="Title" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+                        <Label Text="Calories" FontSize="Caption" TextColor="White" Opacity="0.8" HorizontalOptions="Center"/>
+                    </StackLayout>
+                </Grid>
+            </Frame>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FoodDrinkApp.Views.SettingsPage"
+             Title="Settings"
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
+    <ScrollView>
+        <VerticalStackLayout Spacing="16" Margin="16">
+            <Frame CornerRadius="16" HasShadow="True" BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}" Padding="16">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Appearance" FontSize="Subtitle" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}"/>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout>
+                            <Label Text="Dark Mode" FontSize="Body" FontAttributes="Bold"/>
+                            <Label Text="Switch between light and dark themes" FontSize="Caption" Opacity="0.7"/>
+                        </VerticalStackLayout>
+                        <Switch x:Name="DarkModeSwitch" Grid.Column="1" VerticalOptions="Center" Toggled="OnDarkModeToggled"/>
+                    </Grid>
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Font Size" FontSize="Body" FontAttributes="Bold"/>
+                        <Slider x:Name="FontSizeSlider" Minimum="0.8" Maximum="1.5" Value="1.0"/>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+            <Frame CornerRadius="16" HasShadow="True" BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}" Padding="16">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Accessibility" FontSize="Subtitle" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}"/>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout><Label Text="Screen Reader Support" FontSize="Body" FontAttributes="Bold"/><Label Text="Enable voice feedback" FontSize="Caption" Opacity="0.7"/></VerticalStackLayout>
+                        <Switch Grid.Column="1" VerticalOptions="Center" IsToggled="True"/>
+                    </Grid>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout><Label Text="High Contrast Mode" FontSize="Body" FontAttributes="Bold"/><Label Text="Increase color contrast" FontSize="Caption" Opacity="0.7"/></VerticalStackLayout>
+                        <Switch Grid.Column="1" VerticalOptions="Center"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Frame>
+            <Frame CornerRadius="16" HasShadow="True" BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}" Padding="16">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Hardware Features" FontSize="Subtitle" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}"/>
+                    <Grid ColumnDefinitions="*,Auto"><VerticalStackLayout><Label Text="Camera" FontSize="Body" FontAttributes="Bold"/><Label Text="Food recognition" FontSize="Caption" Opacity="0.7"/></VerticalStackLayout><Switch Grid.Column="1" VerticalOptions="Center" IsToggled="True"/></Grid>
+                    <Grid ColumnDefinitions="*,Auto"><VerticalStackLayout><Label Text="Location" FontSize="Body" FontAttributes="Bold"/><Label Text="Find nearby restaurants" FontSize="Caption" Opacity="0.7"/></VerticalStackLayout><Switch Grid.Column="1" VerticalOptions="Center" IsToggled="True"/></Grid>
+                    <Grid ColumnDefinitions="*,Auto"><VerticalStackLayout><Label Text="Microphone" FontSize="Body" FontAttributes="Bold"/><Label Text="Voice commands" FontSize="Caption" Opacity="0.7"/></VerticalStackLayout><Switch Grid.Column="1" VerticalOptions="Center"/></Grid>
+                    <Grid ColumnDefinitions="*,Auto"><VerticalStackLayout><Label Text="Vibration" FontSize="Body" FontAttributes="Bold"/><Label Text="Haptic feedback" FontSize="Caption" Opacity="0.7"/></VerticalStackLayout><Switch Grid.Column="1" VerticalOptions="Center" IsToggled="True"/></Grid>
+                </VerticalStackLayout>
+            </Frame>
+            <Frame CornerRadius="16" HasShadow="True" BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}" Padding="16">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="About" FontSize="Subtitle" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource PrimaryLight}, Dark={StaticResource PrimaryDark}}"/>
+                    <Grid ColumnDefinitions="*,*"><Label Text="App Version" FontSize="Body"/><Label Grid.Column="1" Text="1.0.0" HorizontalOptions="End" FontSize="Body" Opacity="0.7"/></Grid>
+                    <Grid ColumnDefinitions="*,*"><Label Text="Developer" FontSize="Body"/><Label Grid.Column="1" Text="Mobile Computing" HorizontalOptions="End" FontSize="Body" Opacity="0.7"/></Grid>
+                </VerticalStackLayout>
+            </Frame>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
