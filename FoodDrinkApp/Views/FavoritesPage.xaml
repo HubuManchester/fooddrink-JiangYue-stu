@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:FoodDrinkApp.Models"
+             xmlns:converters="clr-namespace:FoodDrinkApp.Converters"
+             x:Class="FoodDrinkApp.Views.FavoritesPage"
+             x:Name="FavoritesPageRoot"
+             Title="My Favorites"
+             BackgroundColor="#F8F9FA"
+             Padding="0">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+            <converters:BoolToHeartConverter x:Key="BoolToHeartConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Favorites List -->
+        <CollectionView Grid.Row="0" 
+                        ItemsSource="{Binding FilteredItems}" 
+                        SelectionMode="None" 
+                        BackgroundColor="Transparent" 
+                        Margin="16,8">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="12">
+                    <Label Text="💝" FontSize="64" HorizontalOptions="Center"/>
+                    <Label Text="No favorites yet" FontSize="18" FontAttributes="Bold" TextColor="#6C757D" HorizontalOptions="Center"/>
+                    <Label Text="Go to Home page and tap the heart icon on any food item to add it to your favorites" 
+                           FontSize="14" TextColor="#ADB5BD" HorizontalOptions="Center" 
+                           HorizontalTextAlignment="Center" Margin="32,0"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:FoodItem">
+                    <Frame CornerRadius="16" HasShadow="True" Margin="0,0,0,12" Padding="14" BackgroundColor="White" BorderColor="#F1F3F5">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnItemTapped" CommandParameter="{Binding .}"/>
+                        </Frame.GestureRecognizers>
+                        <Grid ColumnDefinitions="80,*,56">
+                            <Frame Grid.Column="0" 
+                                   WidthRequest="80" HeightRequest="80" 
+                                   CornerRadius="12" 
+                                   IsClippedToBounds="True"
+                                   Padding="0"
+                                   BackgroundColor="#F8F9FA">
+                                <Image Source="{Binding ImageFileName}" Aspect="AspectFill"/>
+                            </Frame>
+
+                            <VerticalStackLayout Grid.Column="1" Margin="14,0,0,0" Spacing="6">
+                                <Label Text="{Binding Name}" FontSize="17" FontAttributes="Bold" TextColor="#1A1A2E" LineBreakMode="TailTruncation"/>
+                                <HorizontalStackLayout Spacing="6">
+                                    <Label Text="⭐" FontSize="12"/>
+                                    <Label Text="{Binding Rating, StringFormat='{}{0:F1}'}" FontSize="13" TextColor="#FF6B35" FontAttributes="Bold"/>
+                                    <Label Text="•" FontSize="13" TextColor="#ADB5BD"/>
+                                    <Label Text="{Binding Origin}" FontSize="13" TextColor="#6C757D"/>
+                                </HorizontalStackLayout>
+                                <Label Text="{Binding Description}" FontSize="13" TextColor="#ADB5BD" LineBreakMode="TailTruncation" MaxLines="2"/>
+                            </VerticalStackLayout>
+
+                            <Button Grid.Column="2"
+                                    Text="❤️"
+                                    Command="{Binding Source={x:Reference FavoritesPageRoot}, Path=BindingContext.ToggleFavoriteCommand}"
+                                    CommandParameter="{Binding .}"
+                                    BackgroundColor="Transparent"
+                                    TextColor="#FF4757"
+                                    FontSize="28"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"
+                                    WidthRequest="56"
+                                    HeightRequest="56"
+                                    Padding="0"/>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Bottom Stats -->
+        <Frame Grid.Row="0" Margin="16,0,16,12" CornerRadius="16" HasShadow="True" 
+               BackgroundColor="#FF4757" Padding="16,12" BorderColor="Transparent"
+               VerticalOptions="End" HorizontalOptions="Fill">
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="8">
+                <Label Text="❤️" FontSize="20" VerticalOptions="Center"/>
+                <Label Text="{Binding FilteredItems.Count, StringFormat='{0} favorites saved'}" 
+                       FontSize="16" FontAttributes="Bold" TextColor="White" VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+        </Frame>
+    </Grid>
+</ContentPage>

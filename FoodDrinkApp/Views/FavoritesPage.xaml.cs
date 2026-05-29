@@ -1,36 +1,29 @@
-Ôªøusing FoodDrinkApp.Models;
+using FoodDrinkApp.Models;
 using FoodDrinkApp.Services;
 using FoodDrinkApp.ViewModels;
 
 namespace FoodDrinkApp.Views
 {
-    public partial class HomePage : ContentPage
+    public partial class FavoritesPage : ContentPage
     {
         public HomeViewModel ViewModel { get; }
 
-        public HomePage()
+        public FavoritesPage()
         {
             InitializeComponent();
 
-            // ‚òÖ‚òÖ‚òÖ ‰ªé‰æùËµñÊ≥®ÂÖ•ÂÆπÂô®Ëé∑ÂèñÂçï‰æã ViewModel ‚òÖ‚òÖ‚òÖ
+            // °Ô°Ô°Ô ¥”“¿¿µ◊¢»Î»›∆˜ªÒ»°Õ¨“ª∏ˆµ•¿˝ ViewModel °Ô°Ô°Ô
             ViewModel = IPlatformApplication.Current?.Services.GetService<HomeViewModel>()
                 ?? new HomeViewModel(new HardwareService());
 
             BindingContext = ViewModel;
         }
 
-        public HomePage(IHardwareService hardwareService)
-        {
-            InitializeComponent();
-            ViewModel = IPlatformApplication.Current?.Services.GetService<HomeViewModel>()
-                ?? new HomeViewModel(hardwareService);
-            BindingContext = ViewModel;
-        }
-
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            ViewModel.ShowOnlyFavorites = false;
+            // √ø¥Œœ‘ æ ’≤ÿ“≥ ±£¨«ø÷∆œ‘ æ ’≤ÿ
+            ViewModel.ShowOnlyFavorites = true;
             ViewModel.ApplyFilterCommand.Execute(null);
         }
 
