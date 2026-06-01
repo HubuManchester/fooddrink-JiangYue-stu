@@ -23,6 +23,10 @@ namespace FoodDrinkApp.Services
 		// Flashlight
 		Task TurnOnFlashlightAsync();
 		Task TurnOffFlashlightAsync();
+
+		// Accelerometer
+		void StartAccelerometer(Action<AccelerometerData> onReading);
+		void StopAccelerometer();
 	}
 
 	public class HardwareService : IHardwareService
@@ -71,7 +75,7 @@ namespace FoodDrinkApp.Services
 		{
 			try
 			{
-				var request = new GeolocationRequest(GeolocationAccuracy.Medium);
+				var request = new GeolocationRequest(GeolocationAccuracy.Best);
 				var location = await Geolocation.Default.GetLocationAsync(request);
 				return location;
 			}
@@ -120,6 +124,35 @@ namespace FoodDrinkApp.Services
 			catch (FeatureNotSupportedException)
 			{
 				// Flashlight not supported
+			}
+		}
+
+		// ========== ACCELEROMETER ==========
+		public void StartAccelerometer(Action<AccelerometerData> onReading)
+		{
+			try
+			{
+				Accelerometer.Default.ReadingChanged += (s, e) =>
+				{
+					onReading?.Invoke(e.Reading);
+				};
+				Accelerometer.Default.Start(SensorSpeed.UI);
+			}
+			catch (FeatureNotSupportedException)
+			{
+				// Accelerometer not supported
+			}
+		}
+
+		public void StopAccelerometer()
+		{
+			try
+			{
+				Accelerometer.Default.Stop();
+			}
+			catch (FeatureNotSupportedException)
+			{
+				// Accelerometer not supported
 			}
 		}
 	}

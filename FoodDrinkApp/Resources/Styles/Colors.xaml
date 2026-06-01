@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <?xaml-comp compile="true" ?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
     <Color x:Key="PrimaryLight">#FF6B35</Color>
@@ -26,4 +26,12 @@
     <Color x:Key="Gray400">#919191</Color>
     <Color x:Key="Gray600">#404040</Color>
     <Color x:Key="Gray900">#212121</Color>
+    
+    <!-- High Contrast Colors -->
+    <Color x:Key="PrimaryHighContrast">#FFD700</Color>
+    <Color x:Key="BackgroundHighContrast">#000000</Color>
+    <Color x:Key="SurfaceHighContrast">#000000</Color>
+    <Color x:Key="CardHighContrast">#1A1A1A</Color>
+    <Color x:Key="TextPrimaryHighContrast">#FFFFFF</Color>
+    <Color x:Key="TextSecondaryHighContrast">#FFFF00</Color>
 </ResourceDictionary>

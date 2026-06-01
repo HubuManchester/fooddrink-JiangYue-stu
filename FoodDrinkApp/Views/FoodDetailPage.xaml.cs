@@ -1,62 +1,96 @@
-﻿using FoodDrinkApp.Models;
+using FoodDrinkApp.Models;
 using FoodDrinkApp.Services;
 
 namespace FoodDrinkApp.Views
 {
     public partial class FoodDetailPage : ContentPage
     {
-        private readonly IHardwareService _hardwareService;
+        private readonly IHardwareService? _hardwareService;
         private readonly FoodItem _foodItem;
+        
+        private double _currentScale = 1.0;
+        private double _startScale = 1.0;
+        private double _xOffset = 0;
+        private double _yOffset = 0;
+        private double _currentX = 0;
+        private double _currentY = 0;
 
         public FoodDetailPage(FoodItem foodItem)
         {
             InitializeComponent();
             _foodItem = foodItem;
-            BindingContext = foodItem;
-
-            // Get hardware service from DI
-            _hardwareService = IPlatformApplication.Current?.Services?.GetService<IHardwareService>();
-
-            // Build ingredients display
-            BuildIngredients();
+            BindingContext = new FoodDetailViewModel(foodItem);
+            _hardwareService = IPlatformApplication.Current?.Services?.GetService<IHardwareService>() ?? new HardwareService();
         }
 
-        private void BuildIngredients()
+        // ========== PINCH TO ZOOM ==========
+        private void OnPinchUpdated(object sender, PinchGestureUpdatedEventArgs e)
         {
-            // Clear existing children
-            IngredientsContainer.Children.Clear();
+            if (FoodImage == null)
+                return;
 
-            if (_foodItem?.Ingredients != null && _foodItem.Ingredients.Count > 0)
+            if (e.Status == GestureStatus.Started)
             {
-                foreach (var ingredient in _foodItem.Ingredients)
+                _startScale = _currentScale;
+            }
+            else if (e.Status == GestureStatus.Running)
+            {
+                _currentScale = _startScale * e.Scale;
+                _currentScale = Math.Max(1.0, Math.Min(_currentScale, 5.0));
+                
+                FoodImage.Scale = _currentScale;
+            }
+            else if (e.Status == GestureStatus.Completed)
+            {
+                _hardwareService?.Vibrate(20);
+                
+                if (_currentScale <= 1.0)
                 {
-                    var chip = new Frame
-                    {
-                        CornerRadius = 20,
-                        Padding = new Thickness(14, 8),
-                        Margin = new Thickness(0, 0, 8, 8),
-                        HasShadow = false,
-                        BackgroundColor = Color.FromArgb("#FFFFFF"),
-                        BorderColor = Color.FromArgb("#C8E6C9"),
-                        Content = new Label
-                        {
-                            Text = $"•  {ingredient}",
-                            FontSize = 14,
-                            TextColor = Color.FromArgb("#2E7D32")
-                        }
-                    };
-                    IngredientsContainer.Children.Add(chip);
+                    ResetImagePosition();
                 }
             }
-            else
+        }
+
+        // ========== PAN TO MOVE ==========
+        private void OnPanUpdated(object sender, PanUpdatedEventArgs e)
+        {
+            if (FoodImage == null || _currentScale <= 1.0)
+                return;
+
+            if (e.StatusType == GestureStatus.Started)
             {
-                IngredientsContainer.Children.Add(new Label
-                {
-                    Text = "No ingredients listed",
-                    FontSize = 14,
-                    TextColor = Color.FromArgb("#9E9E9E")
-                });
+                _xOffset = _currentX;
+                _yOffset = _currentY;
             }
+            else if (e.StatusType == GestureStatus.Running)
+            {
+                var newX = _xOffset + e.TotalX;
+                var newY = _yOffset + e.TotalY;
+                
+                var maxX = (FoodImage.Width * (_currentScale - 1)) / 2;
+                var maxY = (FoodImage.Height * (_currentScale - 1)) / 2;
+                
+                _currentX = Math.Max(-maxX, Math.Min(newX, maxX));
+                _currentY = Math.Max(-maxY, Math.Min(newY, maxY));
+                
+                FoodImage.TranslationX = _currentX;
+                FoodImage.TranslationY = _currentY;
+            }
+            else if (e.StatusType == GestureStatus.Completed)
+            {
+                _hardwareService?.Vibrate(20);
+            }
+        }
+
+        private void ResetImagePosition()
+        {
+            _currentScale = 1.0;
+            _currentX = 0;
+            _currentY = 0;
+            
+            FoodImage.Scale = 1.0;
+            FoodImage.TranslationX = 0;
+            FoodImage.TranslationY = 0;
         }
 
         // ========== HARDWARE FEATURE 1: CAMERA ==========
@@ -129,7 +163,7 @@ namespace FoodDrinkApp.Views
         }
 
         // ========== HARDWARE FEATURE 3: TEXT-TO-SPEECH ==========
-        private async void OnTTSClicked(object sender, EventArgs e)
+        private async void OnSpeakClicked(object sender, EventArgs e)
         {
             try
             {
@@ -165,6 +199,17 @@ namespace FoodDrinkApp.Views
             {
                 await DisplayAlert("TTS Error", ex.Message, "OK");
             }
+        }
+    }
+
+    public class FoodDetailViewModel
+    {
+        public FoodItem FoodItem { get; }
+        public double ZoomLevel => 1.0;
+
+        public FoodDetailViewModel(FoodItem foodItem)
+        {
+            FoodItem = foodItem;
         }
     }
 }

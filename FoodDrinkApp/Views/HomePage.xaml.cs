@@ -12,7 +12,6 @@ namespace FoodDrinkApp.Views
         {
             InitializeComponent();
 
-            // ★★★ 从依赖注入容器获取单例 ViewModel ★★★
             ViewModel = IPlatformApplication.Current?.Services.GetService<HomeViewModel>()
                 ?? new HomeViewModel(new HardwareService());
 

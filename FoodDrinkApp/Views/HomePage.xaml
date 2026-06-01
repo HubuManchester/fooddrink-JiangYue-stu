@@ -1,13 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:FoodDrinkApp.Models"
              xmlns:converters="clr-namespace:FoodDrinkApp.Converters"
              x:Class="FoodDrinkApp.Views.HomePage"
              x:Name="HomePageRoot"
-             Title="Food Finder"
-             BackgroundColor="#F8F9FA"
-             Padding="0">
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
+             Padding="0"
+             Shell.NavBarIsVisible="False">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -21,167 +21,256 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Search Bar -->
-        <Frame Grid.Row="0" Margin="16,12,16,8" Padding="4" CornerRadius="16" HasShadow="True" BackgroundColor="White" BorderColor="#E9ECEF">
-            <Grid ColumnDefinitions="Auto,*,Auto">
-                <Label Text="🔍" FontSize="18" VerticalOptions="Center" Margin="12,0"/>
-                <Entry Grid.Column="1" 
-                       Placeholder="Search food, cuisine..." 
-                       Text="{Binding SearchText}" 
-                       FontSize="15" 
-                       VerticalOptions="Center" 
-                       BackgroundColor="Transparent"/>
-                <Button Grid.Column="2" 
-                        Text="✖" 
-                        Command="{Binding ClearSearchCommand}"
-                        BackgroundColor="Transparent"
-                        TextColor="#ADB5BD"
-                        FontSize="14"
-                        WidthRequest="40"
-                        IsVisible="{Binding SearchText, Converter={StaticResource StringNotEmptyConverter}}"/>
+        <!-- Header Section with Orange Background -->
+        <Frame Margin="0" Padding="0" CornerRadius="0" HasShadow="False" BackgroundColor="#FF6B35">
+            <VerticalStackLayout Padding="20,50,20,20" Spacing="12">
+                <HorizontalStackLayout Spacing="12">
+                    <Label Text="🍽️" FontSize="40" VerticalOptions="Center"/>
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Food Finder" FontSize="28" FontAttributes="Bold" 
+                               TextColor="White" LineHeight="1.1"/>
+                        <Label Text="Discover delicious recipes" FontSize="14" 
+                               TextColor="#FFF3E0"/>
+                    </VerticalStackLayout>
+                </HorizontalStackLayout>
+
+                <!-- Search Bar -->
+                <Frame Margin="0,12,0,0" Padding="4" CornerRadius="24" 
+                       HasShadow="True"
+                       BackgroundColor="White"
+                       BorderColor="#DEE2E6">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Text="🔍" FontSize="20" VerticalOptions="Center" Margin="12,0"/>
+                        <Entry Grid.Column="1" 
+                               Placeholder="Search food, cuisine..." 
+                               Text="{Binding SearchText}" 
+                               FontSize="16" 
+                               VerticalOptions="Center" 
+                               BackgroundColor="Transparent"
+                               TextColor="#1A1A2E"
+                               PlaceholderColor="#ADB5BD"/>
+                        <Button Grid.Column="2" 
+                                Text="✕" 
+                                Command="{Binding ClearSearchCommand}"
+                                BackgroundColor="Transparent"
+                                TextColor="#ADB5BD"
+                                FontSize="20"
+                                WidthRequest="44"
+                                IsVisible="{Binding SearchText, Converter={StaticResource StringNotEmptyConverter}}"/>
+                    </Grid>
+                </Frame>
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- Accelerometer Display Card -->
+        <Frame Grid.Row="1" Margin="20,0,20,8" CornerRadius="12" HasShadow="False" 
+               BackgroundColor="{AppThemeBinding Light=#FCE4EC, Dark=#1A1020}" 
+               BorderColor="{AppThemeBinding Light=#F8BBD9, Dark=#3D2040}"
+               IsVisible="{Binding IsAccelerometerActive}"
+               Padding="12">
+            <Grid ColumnDefinitions="*,*,*,Auto">
+                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
+                    <Label Text="X" FontSize="{DynamicResource FontSizeCaption}" TextColor="#E91E63" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    <Label Text="{Binding AccelerometerX, StringFormat='{}{0:F2}'}" 
+                           FontSize="{DynamicResource FontSizeBody}" TextColor="#E91E63" FontAttributes="Bold" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+                    <Label Text="Y" FontSize="{DynamicResource FontSizeCaption}" TextColor="#9C27B0" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    <Label Text="{Binding AccelerometerY, StringFormat='{}{0:F2}'}" 
+                           FontSize="{DynamicResource FontSizeBody}" TextColor="#9C27B0" FontAttributes="Bold" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
+                    <Label Text="Z" FontSize="{DynamicResource FontSizeCaption}" TextColor="#673AB7" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    <Label Text="{Binding AccelerometerZ, StringFormat='{}{0:F2}'}" 
+                           FontSize="{DynamicResource FontSizeBody}" TextColor="#673AB7" FontAttributes="Bold" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+                <Button Grid.Column="3" Text="Stop" 
+                        Command="{Binding ToggleAccelerometerCommand}"
+                        BackgroundColor="#E91E63" TextColor="White"
+                        FontSize="{DynamicResource FontSizeCaption}"
+                        WidthRequest="60" HeightRequest="32" CornerRadius="16"
+                        VerticalOptions="Center"/>
             </Grid>
         </Frame>
 
         <!-- Category Filter Buttons -->
-        <ScrollView Grid.Row="1" Orientation="Horizontal" Margin="16,0" HorizontalScrollBarVisibility="Never">
-            <FlexLayout Direction="Row" Wrap="NoWrap" AlignItems="Center" Margin="0,0,0,8">
+        <ScrollView Grid.Row="2" Orientation="Horizontal" Margin="20,0" HorizontalScrollBarVisibility="Never">
+            <FlexLayout Direction="Row" Wrap="NoWrap" AlignItems="Center" Margin="0,0,0,12">
                 <Button Text="All" Command="{Binding SelectCategoryCommand}" CommandParameter="All"
                         BackgroundColor="#FF6B35" TextColor="White" 
-                        CornerRadius="20" HeightRequest="36" FontSize="13" Padding="16,0" FontAttributes="Bold"/>
+                        CornerRadius="20" HeightRequest="36" FontSize="{DynamicResource FontSizeCaption}" Padding="16,0" FontAttributes="Bold"/>
                 <Button Text="Appetizer" Command="{Binding SelectCategoryCommand}" CommandParameter="Appetizer"
-                        BackgroundColor="#F8F9FA" TextColor="#495057" 
-                        CornerRadius="20" HeightRequest="36" FontSize="13" Padding="16,0" 
-                        Margin="8,0,0,0" BorderColor="#DEE2E6" BorderWidth="1"/>
+                        BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#2D2D44}" 
+                        TextColor="{AppThemeBinding Light=#495057, Dark=#ADB5BD}" 
+                        CornerRadius="20" HeightRequest="36" FontSize="{DynamicResource FontSizeCaption}" Padding="16,0" 
+                        Margin="8,0,0,0" BorderColor="{AppThemeBinding Light=#DEE2E6, Dark=#3D3D5C}" BorderWidth="1"/>
                 <Button Text="Main Course" Command="{Binding SelectCategoryCommand}" CommandParameter="Main Course"
-                        BackgroundColor="#F8F9FA" TextColor="#495057" 
-                        CornerRadius="20" HeightRequest="36" FontSize="13" Padding="16,0" 
-                        Margin="8,0,0,0" BorderColor="#DEE2E6" BorderWidth="1"/>
+                        BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#2D2D44}" 
+                        TextColor="{AppThemeBinding Light=#495057, Dark=#ADB5BD}" 
+                        CornerRadius="20" HeightRequest="36" FontSize="{DynamicResource FontSizeCaption}" Padding="16,0" 
+                        Margin="8,0,0,0" BorderColor="{AppThemeBinding Light=#DEE2E6, Dark=#3D3D5C}" BorderWidth="1"/>
                 <Button Text="Dessert" Command="{Binding SelectCategoryCommand}" CommandParameter="Dessert"
-                        BackgroundColor="#F8F9FA" TextColor="#495057" 
-                        CornerRadius="20" HeightRequest="36" FontSize="13" Padding="16,0" 
-                        Margin="8,0,0,0" BorderColor="#DEE2E6" BorderWidth="1"/>
+                        BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#2D2D44}" 
+                        TextColor="{AppThemeBinding Light=#495057, Dark=#ADB5BD}" 
+                        CornerRadius="20" HeightRequest="36" FontSize="{DynamicResource FontSizeCaption}" Padding="16,0" 
+                        Margin="8,0,0,0" BorderColor="{AppThemeBinding Light=#DEE2E6, Dark=#3D3D5C}" BorderWidth="1"/>
                 <Button Text="Drinks" Command="{Binding SelectCategoryCommand}" CommandParameter="Drink"
-                        BackgroundColor="#F8F9FA" TextColor="#495057" 
-                        CornerRadius="20" HeightRequest="36" FontSize="13" Padding="16,0" 
-                        Margin="8,0,0,0" BorderColor="#DEE2E6" BorderWidth="1"/>
+                        BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#2D2D44}" 
+                        TextColor="{AppThemeBinding Light=#495057, Dark=#ADB5BD}" 
+                        CornerRadius="20" HeightRequest="36" FontSize="{DynamicResource FontSizeCaption}" Padding="16,0" 
+                        Margin="8,0,0,0" BorderColor="{AppThemeBinding Light=#DEE2E6, Dark=#3D3D5C}" BorderWidth="1"/>
                 <Button Text="Snacks" Command="{Binding SelectCategoryCommand}" CommandParameter="Snack"
-                        BackgroundColor="#F8F9FA" TextColor="#495057" 
-                        CornerRadius="20" HeightRequest="36" FontSize="13" Padding="16,0" 
-                        Margin="8,0,0,0" BorderColor="#DEE2E6" BorderWidth="1"/>
+                        BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#2D2D44}" 
+                        TextColor="{AppThemeBinding Light=#495057, Dark=#ADB5BD}" 
+                        CornerRadius="20" HeightRequest="36" FontSize="{DynamicResource FontSizeCaption}" Padding="16,0" 
+                        Margin="8,0,0,0" BorderColor="{AppThemeBinding Light=#DEE2E6, Dark=#3D3D5C}" BorderWidth="1"/>
                 <Button Text="❤️ Favorites" Command="{Binding ToggleShowFavoritesCommand}"
                         BackgroundColor="{Binding ShowOnlyFavorites, Converter={StaticResource BoolToColorConverter}}"
-                        TextColor="White" CornerRadius="20" HeightRequest="36" FontSize="13" 
+                        TextColor="White" CornerRadius="20" HeightRequest="36" FontSize="{DynamicResource FontSizeCaption}" 
                         Padding="16,0" Margin="8,0,0,0"/>
             </FlexLayout>
         </ScrollView>
 
         <!-- Food List -->
-        <CollectionView Grid.Row="2" 
+        <CollectionView Grid.Row="3" 
                         ItemsSource="{Binding FilteredItems}" 
                         SelectionMode="None" 
                         BackgroundColor="Transparent" 
-                        Margin="16,8,16,16">
+                        Margin="20,0,20,20">
             <CollectionView.EmptyView>
                 <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="12">
-                    <Label Text="🍽️" FontSize="64" HorizontalOptions="Center"/>
-                    <Label Text="No items found" FontSize="18" FontAttributes="Bold" TextColor="#6C757D" HorizontalOptions="Center"/>
-                    <Label Text="Try adjusting your search or filters" FontSize="14" TextColor="#ADB5BD" HorizontalOptions="Center"/>
+                    <Label Text="🍽️" FontSize="{DynamicResource FontSizeHuge}" HorizontalOptions="Center"/>
+                    <Label Text="No items found" FontSize="{DynamicResource FontSizeSubtitle}" FontAttributes="Bold" 
+                           TextColor="{AppThemeBinding Light=#6C757D, Dark=#ADB5BD}" HorizontalOptions="Center"/>
+                    <Label Text="Try adjusting your search or filters" FontSize="{DynamicResource FontSizeBody}" 
+                           TextColor="{AppThemeBinding Light=#ADB5BD, Dark=#6C757D}" HorizontalOptions="Center"/>
                 </VerticalStackLayout>
             </CollectionView.EmptyView>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:FoodItem">
-                    <Frame CornerRadius="16" HasShadow="True" Margin="0,0,0,12" Padding="14" BackgroundColor="White" BorderColor="#F1F3F5">
-                        <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnItemTapped" CommandParameter="{Binding .}"/>
-                        </Frame.GestureRecognizers>
-                        <Grid ColumnDefinitions="80,*,56">
-                            <Frame Grid.Column="0" 
-                                   WidthRequest="80" HeightRequest="80" 
-                                   CornerRadius="12" 
-                                   IsClippedToBounds="True"
-                                   Padding="0"
-                                   BackgroundColor="#F8F9FA">
-                                <Image Source="{Binding ImageFileName}" Aspect="AspectFill"/>
-                            </Frame>
+                    <SwipeView Margin="0,0,0,16">
+                        <SwipeView.LeftItems>
+                            <SwipeItem Text="Delete" 
+                                       BackgroundColor="#F44336"
+                                       Command="{Binding Source={x:Reference HomePageRoot}, Path=BindingContext.DeleteItemCommand}"
+                                       CommandParameter="{Binding .}"
+                                       IsVisible="True"/>
+                        </SwipeView.LeftItems>
+                        <SwipeView.RightItems>
+                            <SwipeItem Text="Favorite" 
+                                       BackgroundColor="#FF9800"
+                                       Command="{Binding Source={x:Reference HomePageRoot}, Path=BindingContext.SwipeFavoriteCommand}"
+                                       CommandParameter="{Binding .}"/>
+                            <SwipeItem Text="Share" 
+                                       BackgroundColor="#2196F3"
+                                       Command="{Binding Source={x:Reference HomePageRoot}, Path=BindingContext.ShareItemCommand}"
+                                       CommandParameter="{Binding .}"/>
+                        </SwipeView.RightItems>
+                        <Frame CornerRadius="20" HasShadow="True" Padding="14" 
+                               BackgroundColor="{AppThemeBinding Light=White, Dark=#2D2D44}" 
+                               BorderColor="{AppThemeBinding Light=#F1F3F5, Dark=#3D3D5C}">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnItemTapped" CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+                            <Grid ColumnDefinitions="100,*,60">
+                                <Frame Grid.Column="0" 
+                                       WidthRequest="100" HeightRequest="100" 
+                                       CornerRadius="16" 
+                                       IsClippedToBounds="True"
+                                       Padding="0"
+                                       BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#1A1A2E}">
+                                    <Image Source="{Binding ImageFileName}" Aspect="AspectFill"/>
+                                </Frame>
 
-                            <VerticalStackLayout Grid.Column="1" Margin="14,0,0,0" Spacing="6">
-                                <Label Text="{Binding Name}" FontSize="17" FontAttributes="Bold" TextColor="#1A1A2E" LineBreakMode="TailTruncation"/>
-                                <HorizontalStackLayout Spacing="6">
-                                    <Label Text="⭐" FontSize="12"/>
-                                    <Label Text="{Binding Rating, StringFormat='{}{0:F1}'}" FontSize="13" TextColor="#FF6B35" FontAttributes="Bold"/>
-                                    <Label Text="•" FontSize="13" TextColor="#ADB5BD"/>
-                                    <Label Text="{Binding Origin}" FontSize="13" TextColor="#6C757D"/>
-                                </HorizontalStackLayout>
-                                <Label Text="{Binding Description}" FontSize="13" TextColor="#ADB5BD" LineBreakMode="TailTruncation" MaxLines="2"/>
-                            </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" Margin="14,4,0,4" Spacing="8">
+                                    <Label Text="{Binding Name}" FontSize="{DynamicResource FontSizeSubtitle}" FontAttributes="Bold" 
+                                           TextColor="{AppThemeBinding Light=#1A1A2E, Dark=#F8F9FA}" LineBreakMode="TailTruncation"/>
+                                    <HorizontalStackLayout Spacing="6">
+                                        <Label Text="⭐" FontSize="{DynamicResource FontSizeCaption}"/>
+                                        <Label Text="{Binding Rating, StringFormat='{}{0:F1}'}" FontSize="{DynamicResource FontSizeCaption}" TextColor="#FF6B35" FontAttributes="Bold"/>
+                                        <Label Text="•" FontSize="{DynamicResource FontSizeCaption}" TextColor="{AppThemeBinding Light=#ADB5BD, Dark=#6C757D}"/>
+                                        <Label Text="{Binding Origin}" FontSize="{DynamicResource FontSizeCaption}" TextColor="{AppThemeBinding Light=#6C757D, Dark=#ADB5BD}"/>
+                                    </HorizontalStackLayout>
+                                    <Label Text="{Binding Description}" FontSize="{DynamicResource FontSizeBody}" 
+                                           TextColor="{AppThemeBinding Light=#495057, Dark=#ADB5BD}" LineBreakMode="TailTruncation" MaxLines="2"/>
+                                </VerticalStackLayout>
 
-                            <Button Grid.Column="2"
-                                    Text="{Binding IsFavorite, Converter={StaticResource BoolToHeartConverter}}"
-                                    Command="{Binding Source={x:Reference HomePageRoot}, Path=BindingContext.ToggleFavoriteCommand}"
-                                    CommandParameter="{Binding .}"
-                                    BackgroundColor="Transparent"
-                                    TextColor="{Binding IsFavorite, Converter={StaticResource BoolToColorConverter}}"
-                                    FontSize="28"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="Center"
-                                    WidthRequest="56"
-                                    HeightRequest="56"
-                                    Padding="0"/>
-                        </Grid>
-                    </Frame>
+                                <Button Grid.Column="2"
+                                        Text="{Binding IsFavorite, Converter={StaticResource BoolToHeartConverter}}"
+                                        Command="{Binding Source={x:Reference HomePageRoot}, Path=BindingContext.ToggleFavoriteCommand}"
+                                        CommandParameter="{Binding .}"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{Binding IsFavorite, Converter={StaticResource BoolToColorConverter}}"
+                                        FontSize="{DynamicResource FontSizeLarge}"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="Center"
+                                        WidthRequest="60"
+                                        HeightRequest="60"
+                                        Padding="0"/>
+                            </Grid>
+                        </Frame>
+                    </SwipeView>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <!-- ========== FLOATING ACTION BUTTONS ========== -->
+        <!-- ========== Floating Action Buttons ========== -->
 
         <!-- Menu items -->
-        <VerticalStackLayout Grid.RowSpan="3" 
+        <VerticalStackLayout Grid.RowSpan="4" 
                              HorizontalOptions="End" 
                              VerticalOptions="End" 
-                             Margin="0,0,20,170" 
+                             Margin="0,0,20,190" 
                              Spacing="12" 
                              IsVisible="{Binding IsMenuOpen}"
                              ZIndex="100">
 
             <Button Text="📍 GPS" 
                     WidthRequest="140" HeightRequest="44" CornerRadius="22"
-                    BackgroundColor="#4CAF50" TextColor="White" FontSize="14"
+                    BackgroundColor="#4CAF50" TextColor="White" FontSize="{DynamicResource FontSizeBody}"
                     Command="{Binding GetNearbyLocationCommand}"
                     HorizontalOptions="End"/>
 
             <Button Text="📷 Camera" 
                     WidthRequest="140" HeightRequest="44" CornerRadius="22"
-                    BackgroundColor="#2196F3" TextColor="White" FontSize="14"
+                    BackgroundColor="#2196F3" TextColor="White" FontSize="{DynamicResource FontSizeBody}"
                     Command="{Binding TakePhotoCommand}"
                     HorizontalOptions="End"/>
 
             <Button Text="🔊 Read" 
                     WidthRequest="140" HeightRequest="44" CornerRadius="22"
-                    BackgroundColor="#9C27B0" TextColor="White" FontSize="14"
+                    BackgroundColor="#9C27B0" TextColor="White" FontSize="{DynamicResource FontSizeBody}"
                     Command="{Binding SpeakRecipeCommand}"
                     HorizontalOptions="End"/>
 
             <Button Text="✨ Vibrate" 
                     WidthRequest="140" HeightRequest="44" CornerRadius="22"
-                    BackgroundColor="#FF9800" TextColor="White" FontSize="14"
+                    BackgroundColor="#FF9800" TextColor="White" FontSize="{DynamicResource FontSizeBody}"
                     Command="{Binding VibrateCommand}"
                     HorizontalOptions="End"/>
+
+            <Button Text="📱 Accelerometer" 
+                    WidthRequest="160" HeightRequest="44" CornerRadius="22"
+                    BackgroundColor="#E91E63" TextColor="White" FontSize="{DynamicResource FontSizeBody}"
+                    Command="{Binding ToggleAccelerometerCommand}"
+                    HorizontalOptions="End"
+                    Padding="10,0"/>
         </VerticalStackLayout>
 
         <!-- Main FAB button -->
-        <Button Grid.RowSpan="3"
+        <Button Grid.RowSpan="4"
                 HorizontalOptions="End" 
                 VerticalOptions="End"
-                Margin="0,0,20,100"
-                WidthRequest="60" HeightRequest="60" 
-                CornerRadius="30"
+                Margin="0,0,20,120"
+                WidthRequest="64" HeightRequest="64" 
+                CornerRadius="32"
                 BackgroundColor="#FF6B35" 
                 TextColor="White" 
-                FontSize="26"
+                FontSize="{DynamicResource FontSizeLarge}"
                 Command="{Binding ToggleMenuCommand}"
                 ZIndex="200"
                 Padding="0">
@@ -194,6 +283,5 @@
                 </DataTrigger>
             </Button.Triggers>
         </Button>
-
     </Grid>
 </ContentPage>

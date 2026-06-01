@@ -2,22 +2,61 @@
 <Shell x:Class="FoodDrinkApp.AppShell" 
        xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
-       xmlns:views="clr-namespace:FoodDrinkApp.Views" 
+       xmlns:views="clr-namespace:FoodDrinkApp.Views"
        Shell.FlyoutBehavior="Disabled" 
        Shell.NavBarHasShadow="True"
        Shell.NavBarIsVisible="True"
-       Title="Food Drink App">
+       Shell.BackgroundColor="{AppThemeBinding Light=White, Dark=#1A1A2E}"
+       Shell.ForegroundColor="{AppThemeBinding Light=#FF6B35, Dark=#FF8C5A}"
+       Shell.TitleColor="{AppThemeBinding Light=#1A1A2E, Dark=#F8F9FA}"
+       Shell.UnselectedColor="{AppThemeBinding Light=#ADB5BD, Dark=#6C757D}"
+       Shell.TabBarBackgroundColor="{AppThemeBinding Light=White, Dark=#16213E}"
+       Shell.TabBarForegroundColor="{AppThemeBinding Light=#FF6B35, Dark=#FF8C5A}"
+       Shell.TabBarUnselectedColor="{AppThemeBinding Light=#ADB5BD, Dark=#6C757D}"
+       Title="Food Finder">
 
+    <!-- ========== Bottom Tab Bar with Emoji Icons ========== -->
     <TabBar>
-        <Tab Title="Home" Icon="home.png">
-            <ShellContent Route="HomePage" ContentTemplate="{DataTemplate views:HomePage}" />
+
+        <!-- Home Tab -->
+        <Tab Title="Home">
+            <Tab.Icon>
+                <FontImageSource 
+                    Glyph="🏠"
+                    FontFamily="Default"
+                    Size="24"
+                    Color="{AppThemeBinding Light=#ADB5BD, Dark=#6C757D}"/>
+            </Tab.Icon>
+            <ShellContent Route="HomePage" 
+                          ContentTemplate="{DataTemplate views:HomePage}" />
         </Tab>
-        <Tab Title="Favorites" Icon="heart.png">
-            <ShellContent Route="FavoritesPage" ContentTemplate="{DataTemplate views:FavoritesPage}" />
+
+        <!-- Favorites Tab -->
+        <Tab Title="Favorites">
+            <Tab.Icon>
+                <FontImageSource 
+                    Glyph="❤️"
+                    FontFamily="Default"
+                    Size="24"
+                    Color="{AppThemeBinding Light=#ADB5BD, Dark=#6C757D}"/>
+            </Tab.Icon>
+            <ShellContent Route="FavoritesPage" 
+                          ContentTemplate="{DataTemplate views:FavoritesPage}" />
         </Tab>
-        <Tab Title="Settings" Icon="settings.png">
-            <ShellContent Route="SettingsPage" ContentTemplate="{DataTemplate views:SettingsPage}" />
+
+        <!-- Settings Tab -->
+        <Tab Title="Settings">
+            <Tab.Icon>
+                <FontImageSource 
+                    Glyph="⚙️"
+                    FontFamily="Default"
+                    Size="24"
+                    Color="{AppThemeBinding Light=#ADB5BD, Dark=#6C757D}"/>
+            </Tab.Icon>
+            <ShellContent Route="SettingsPage" 
+                          ContentTemplate="{DataTemplate views:SettingsPage}" />
         </Tab>
+
     </TabBar>
 
 </Shell>

@@ -12,7 +12,7 @@ namespace FoodDrinkApp.Views
         {
             InitializeComponent();
 
-            // ★★★ 从依赖注入容器获取同一个单例 ViewModel ★★★
+            // Get the same singleton ViewModel from DI container
             ViewModel = IPlatformApplication.Current?.Services.GetService<HomeViewModel>()
                 ?? new HomeViewModel(new HardwareService());
 
@@ -22,7 +22,7 @@ namespace FoodDrinkApp.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            // 每次显示收藏页时，强制显示收藏
+            // Always show only favorites when this page appears
             ViewModel.ShowOnlyFavorites = true;
             ViewModel.ApplyFilterCommand.Execute(null);
         }

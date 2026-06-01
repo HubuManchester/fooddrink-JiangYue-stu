@@ -1,14 +1,66 @@
-﻿<?xml version = "1.0" encoding = "UTF-8" ?>
+<?xml version = "1.0" encoding = "UTF-8" ?>
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:FoodDrinkApp"
              x:Class="FoodDrinkApp.App">
     <Application.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
-                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
-            </ResourceDictionary.MergedDictionaries>
+
+            <!-- ========== Theme Colors ========== -->
+            <!-- Light theme colors -->
+            <Color x:Key="BackgroundLight">#F8F9FA</Color>
+            <Color x:Key="CardLight">#FFFFFF</Color>
+            <Color x:Key="TextPrimaryLight">#1A1A2E</Color>
+            <Color x:Key="TextSecondaryLight">#6C757D</Color>
+            <Color x:Key="BorderLight">#E9ECEF</Color>
+
+            <!-- Dark theme colors -->
+            <Color x:Key="BackgroundDark">#1A1A2E</Color>
+            <Color x:Key="CardDark">#2D2D44</Color>
+            <Color x:Key="TextPrimaryDark">#F8F9FA</Color>
+            <Color x:Key="TextSecondaryDark">#ADB5BD</Color>
+            <Color x:Key="BorderDark">#3D3D5C</Color>
+
+            <!-- High Contrast colors (for accessibility) -->
+            <Color x:Key="BackgroundHighContrast">#FFFFFF</Color>
+            <Color x:Key="CardHighContrast">#FFFFFF</Color>
+            <Color x:Key="TextPrimaryHighContrast">#000000</Color>
+            <Color x:Key="TextSecondaryHighContrast">#000000</Color>
+            <Color x:Key="BorderHighContrast">#000000</Color>
+
+            <!-- Brand colors -->
+            <Color x:Key="PrimaryColor">#FF6B35</Color>
+            <Color x:Key="SecondaryColor">#2196F3</Color>
+            <Color x:Key="AccentColor">#4CAF50</Color>
+            <Color x:Key="PurpleColor">#9C27B0</Color>
+            <Color x:Key="OrangeColor">#FF9800</Color>
+            <Color x:Key="DangerColor">#FF4757</Color>
+
+            <!-- High Contrast Brand colors -->
+            <Color x:Key="PrimaryHighContrast">#0000FF</Color>
+            <Color x:Key="SecondaryHighContrast">#FF0000</Color>
+            <Color x:Key="AccentHighContrast">#008000</Color>
+
+            <!-- ========== Page Content Font Sizes (dynamic, updated via slider) ========== -->
+            <x:Double x:Key="FontSizeMicro">10</x:Double>
+            <x:Double x:Key="FontSizeCaption">12</x:Double>
+            <x:Double x:Key="FontSizeBody">14</x:Double>
+            <x:Double x:Key="FontSizeSubtitle">16</x:Double>
+            <x:Double x:Key="FontSizeTitle">20</x:Double>
+            <x:Double x:Key="FontSizeLarge">28</x:Double>
+            <x:Double x:Key="FontSizeHuge">36</x:Double>
+
+            <!-- ========== Shell Navigation Font Sizes ========== -->
+            <x:Double x:Key="ShellTitleFontSize">18</x:Double>
+            <x:Double x:Key="ShellTabFontSize">12</x:Double>
+
+            <!-- ========== Current Theme Colors (dynamic) ========== -->
+            <Color x:Key="BackgroundColor">#F8F9FA</Color>
+            <Color x:Key="CardColor">#FFFFFF</Color>
+            <Color x:Key="TextPrimaryColor">#1A1A2E</Color>
+            <Color x:Key="TextSecondaryColor">#6C757D</Color>
+            <Color x:Key="BorderColor">#E9ECEF</Color>
+            <Color x:Key="CurrentPrimaryColor">#FF6B35</Color>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

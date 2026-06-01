@@ -1,36 +1,38 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <application android:allowBackup="true" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true"></application>
+	<application android:allowBackup="true" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true"></application>
 
-    <!-- Network -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
+	<!-- ========== NETWORK PERMISSIONS ========== -->
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Vibration -->
-    <uses-permission android:name="android.permission.VIBRATE" />
+	<!-- ========== VIBRATION PERMISSION ========== -->
+	<uses-permission android:name="android.permission.VIBRATE" />
 
-    <!-- Camera -->
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
+	<!-- ========== CAMERA PERMISSIONS ========== -->
+	<uses-permission android:name="android.permission.CAMERA" />
+	<uses-feature android:name="android.hardware.camera" android:required="false" />
 
-    <!-- Location/GPS -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-feature android:name="android.hardware.location" android:required="false" />
-    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+	<!-- ========== GPS/LOCATION PERMISSIONS ========== -->
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+	<uses-feature android:name="android.hardware.location" android:required="false" />
+	<uses-feature android:name="android.hardware.location.gps" android:required="false" />
 
-    <!-- Microphone -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-feature android:name="android.hardware.microphone" android:required="false" />
+	<!-- ========== MICROPHONE PERMISSION ========== -->
+	<uses-permission android:name="android.permission.RECORD_AUDIO" />
+	<uses-feature android:name="android.hardware.microphone" android:required="false" />
 
-    <!-- Flashlight -->
-    <uses-permission android:name="android.permission.FLASHLIGHT" />
-    <uses-feature android:name="android.hardware.camera.flash" android:required="false" />
+	<!-- ========== FLASHLIGHT PERMISSION ========== -->
+	<uses-permission android:name="android.permission.FLASHLIGHT" />
+	<uses-feature android:name="android.hardware.camera.flash" android:required="false" />
 
-    <!-- 🔽 ADD THIS - Required for Android 11+ to query camera app -->
-    <queries>
-        <intent>
-            <action android:name="android.media.action.IMAGE_CAPTURE" />
-        </intent>
-    </queries>
+	<!-- ========== REQUIRED FOR ANDROID 11+ (API 30+) ========== -->
+	<!-- Allows the app to discover and interact with the camera app -->
+	<queries>
+		<intent>
+			<action android:name="android.media.action.IMAGE_CAPTURE" />
+		</intent>
+	</queries>
+
 </manifest>

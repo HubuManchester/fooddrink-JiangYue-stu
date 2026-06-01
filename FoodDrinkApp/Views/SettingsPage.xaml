@@ -1,9 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FoodDrinkApp.Views.SettingsPage"
-             Title="Settings"
-             BackgroundColor="#F8F9FA"
+             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}"
              Padding="0">
 
     <ScrollView>
@@ -12,20 +11,28 @@
             <!-- ========== APPEARANCE SECTION ========== -->
             <VerticalStackLayout Spacing="4">
                 <Label Text="🎨 APPEARANCE" 
-                       FontSize="12" FontAttributes="Bold" 
+                       FontSize="{DynamicResource FontSizeCaption}" 
+                       FontAttributes="Bold" 
                        TextColor="#FF6B35" 
                        CharacterSpacing="2"
                        Margin="4,0,0,4"/>
 
                 <Frame CornerRadius="20" HasShadow="True" Padding="0" 
-                       BackgroundColor="White" BorderColor="Transparent">
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#2D2D44}" 
+                       BorderColor="Transparent">
                     <VerticalStackLayout>
 
                         <!-- Dark Mode -->
                         <Grid Padding="18,14" ColumnDefinitions="*,Auto">
                             <VerticalStackLayout VerticalOptions="Center">
-                                <Label Text="🌙 Dark Mode" FontSize="16" FontAttributes="Bold" TextColor="#1A1A2E"/>
-                                <Label Text="Switch between light and dark themes" FontSize="12" TextColor="#6C757D" Margin="0,2,0,0"/>
+                                <Label Text="🌙 Dark Mode" 
+                                       FontSize="{DynamicResource FontSizeSubtitle}" 
+                                       FontAttributes="Bold" 
+                                       TextColor="{AppThemeBinding Light=#1A1A2E, Dark=#F8F9FA}"/>
+                                <Label Text="Switch between light and dark themes" 
+                                       FontSize="{DynamicResource FontSizeCaption}" 
+                                       TextColor="{AppThemeBinding Light=#6C757D, Dark=#ADB5BD}" 
+                                       Margin="0,2,0,0"/>
                             </VerticalStackLayout>
                             <Switch x:Name="DarkModeSwitch" 
                                     Grid.Column="1" 
@@ -35,24 +42,35 @@
                                     Toggled="OnDarkModeToggled"/>
                         </Grid>
 
-                        <BoxView HeightRequest="1" BackgroundColor="#F1F3F5" Margin="18,0"/>
+                        <BoxView HeightRequest="1" 
+                                 BackgroundColor="{AppThemeBinding Light=#F1F3F5, Dark=#3D3D5C}" 
+                                 Margin="18,0"/>
 
                         <!-- Font Size -->
                         <VerticalStackLayout Padding="18,14" Spacing="10">
                             <HorizontalStackLayout Spacing="8">
-                                <Label Text="🔤 Font Size" FontSize="16" FontAttributes="Bold" TextColor="#1A1A2E"/>
+                                <Label Text="🔤 Font Size" 
+                                       FontSize="{DynamicResource FontSizeSubtitle}" 
+                                       FontAttributes="Bold" 
+                                       TextColor="{AppThemeBinding Light=#1A1A2E, Dark=#F8F9FA}"/>
                                 <Frame CornerRadius="10" Padding="6,2" HasShadow="False" 
                                        BackgroundColor="#FFF3E0" BorderColor="Transparent">
                                     <Label x:Name="FontSizeLabel" 
                                            Text="Medium" 
-                                           FontSize="11" FontAttributes="Bold" 
+                                           FontSize="{DynamicResource FontSizeCaption}" 
+                                           FontAttributes="Bold" 
                                            TextColor="#FF6B35"/>
                                 </Frame>
                             </HorizontalStackLayout>
-                            <Label Text="Adjust the text size throughout the app" FontSize="12" TextColor="#6C757D"/>
+                            <Label Text="Adjust the text size throughout the app" 
+                                   FontSize="{DynamicResource FontSizeCaption}" 
+                                   TextColor="{AppThemeBinding Light=#6C757D, Dark=#ADB5BD}"/>
 
                             <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,4,0,0">
-                                <Label Text="A" FontSize="14" TextColor="#ADB5BD" VerticalOptions="Center"/>
+                                <Label Text="A" 
+                                       FontSize="{DynamicResource FontSizeBody}" 
+                                       TextColor="{AppThemeBinding Light=#ADB5BD, Dark=#6C757D}" 
+                                       VerticalOptions="Center"/>
                                 <Slider x:Name="FontSizeSlider" 
                                         Grid.Column="1"
                                         Minimum="0.8" Maximum="1.5" Value="1.0"
@@ -61,8 +79,11 @@
                                         ThumbColor="#FF6B35"
                                         ValueChanged="OnFontSizeChanged"
                                         Margin="12,0"/>
-                                <Label Grid.Column="2" Text="A" FontSize="20" FontAttributes="Bold" 
-                                       TextColor="#FF6B35" VerticalOptions="Center"/>
+                                <Label Grid.Column="2" Text="A" 
+                                       FontSize="{DynamicResource FontSizeTitle}" 
+                                       FontAttributes="Bold" 
+                                       TextColor="#FF6B35" 
+                                       VerticalOptions="Center"/>
                             </Grid>
                         </VerticalStackLayout>
 
@@ -73,91 +94,146 @@
             <!-- ========== ACCESSIBILITY SECTION ========== -->
             <VerticalStackLayout Spacing="4">
                 <Label Text="♿ ACCESSIBILITY" 
-                       FontSize="12" FontAttributes="Bold" 
+                       FontSize="{DynamicResource FontSizeCaption}" 
+                       FontAttributes="Bold" 
                        TextColor="#2196F3" 
                        CharacterSpacing="2"
                        Margin="4,0,0,4"/>
 
                 <Frame CornerRadius="20" HasShadow="True" Padding="0" 
-                       BackgroundColor="White" BorderColor="Transparent">
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#2D2D44}" 
+                       BorderColor="Transparent">
                     <VerticalStackLayout>
 
+                        <!-- Screen Reader -->
                         <Grid Padding="18,14" ColumnDefinitions="*,Auto">
                             <VerticalStackLayout VerticalOptions="Center">
-                                <Label Text="🔊 Screen Reader" FontSize="16" FontAttributes="Bold" TextColor="#1A1A2E"/>
-                                <Label Text="Enable voice feedback for recipes" FontSize="12" TextColor="#6C757D" Margin="0,2,0,0"/>
+                                <Label Text="🔊 Screen Reader Support" 
+                                       FontSize="{DynamicResource FontSizeSubtitle}" 
+                                       FontAttributes="Bold" 
+                                       TextColor="{AppThemeBinding Light=#1A1A2E, Dark=#F8F9FA}"/>
+                                <Label Text="Enable voice feedback for recipes" 
+                                       FontSize="{DynamicResource FontSizeCaption}" 
+                                       TextColor="{AppThemeBinding Light=#6C757D, Dark=#ADB5BD}" 
+                                       Margin="0,2,0,0"/>
                             </VerticalStackLayout>
                             <Switch Grid.Column="1" VerticalOptions="Center"
                                     OnColor="#2196F3" ThumbColor="White"
                                     IsToggled="True"/>
                         </Grid>
 
-                        <BoxView HeightRequest="1" BackgroundColor="#F1F3F5" Margin="18,0"/>
+                        <BoxView HeightRequest="1" 
+                                 BackgroundColor="{AppThemeBinding Light=#F1F3F5, Dark=#3D3D5C}" 
+                                 Margin="18,0"/>
 
+                        <!-- High Contrast -->
                         <Grid Padding="18,14" ColumnDefinitions="*,Auto">
                             <VerticalStackLayout VerticalOptions="Center">
-                                <Label Text="👁️ High Contrast" FontSize="16" FontAttributes="Bold" TextColor="#1A1A2E"/>
-                                <Label Text="Increase color contrast for readability" FontSize="12" TextColor="#6C757D" Margin="0,2,0,0"/>
+                                <Label Text="👁️ High Contrast Mode" 
+                                       FontSize="{DynamicResource FontSizeSubtitle}" 
+                                       FontAttributes="Bold" 
+                                       TextColor="{AppThemeBinding Light=#1A1A2E, Dark=#F8F9FA}"/>
+                                <Label Text="Increase color contrast for readability" 
+                                       FontSize="{DynamicResource FontSizeCaption}" 
+                                       TextColor="{AppThemeBinding Light=#6C757D, Dark=#ADB5BD}" 
+                                       Margin="0,2,0,0"/>
                             </VerticalStackLayout>
-                            <Switch Grid.Column="1" VerticalOptions="Center"
-                                    OnColor="#2196F3" ThumbColor="White"/>
+                            <Switch x:Name="HighContrastSwitch" Grid.Column="1" VerticalOptions="Center"
+                                    OnColor="#2196F3" ThumbColor="White"
+                                    Toggled="OnHighContrastToggled"/>
                         </Grid>
 
                     </VerticalStackLayout>
                 </Frame>
             </VerticalStackLayout>
 
-            <!-- ========== HARDWARE SECTION ========== -->
+            <!-- ========== HARDWARE FEATURES SECTION ========== -->
             <VerticalStackLayout Spacing="4">
                 <Label Text="📱 HARDWARE FEATURES" 
-                       FontSize="12" FontAttributes="Bold" 
+                       FontSize="{DynamicResource FontSizeCaption}" 
+                       FontAttributes="Bold" 
                        TextColor="#4CAF50" 
                        CharacterSpacing="2"
                        Margin="4,0,0,4"/>
 
                 <Frame CornerRadius="20" HasShadow="True" Padding="0" 
-                       BackgroundColor="White" BorderColor="Transparent">
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#2D2D44}" 
+                       BorderColor="Transparent">
                     <VerticalStackLayout>
 
+                        <!-- Camera -->
                         <Grid Padding="18,14" ColumnDefinitions="*,Auto">
                             <VerticalStackLayout VerticalOptions="Center">
-                                <Label Text="📷 Camera" FontSize="16" FontAttributes="Bold" TextColor="#1A1A2E"/>
-                                <Label Text="Food photo recognition" FontSize="12" TextColor="#6C757D" Margin="0,2,0,0"/>
+                                <Label Text="📷 Camera" 
+                                       FontSize="{DynamicResource FontSizeSubtitle}" 
+                                       FontAttributes="Bold" 
+                                       TextColor="{AppThemeBinding Light=#1A1A2E, Dark=#F8F9FA}"/>
+                                <Label Text="Food photo recognition" 
+                                       FontSize="{DynamicResource FontSizeCaption}" 
+                                       TextColor="{AppThemeBinding Light=#6C757D, Dark=#ADB5BD}" 
+                                       Margin="0,2,0,0"/>
                             </VerticalStackLayout>
                             <Switch Grid.Column="1" VerticalOptions="Center"
                                     OnColor="#4CAF50" ThumbColor="White"
                                     IsToggled="True"/>
                         </Grid>
 
-                        <BoxView HeightRequest="1" BackgroundColor="#F1F3F5" Margin="18,0"/>
+                        <BoxView HeightRequest="1" 
+                                 BackgroundColor="{AppThemeBinding Light=#F1F3F5, Dark=#3D3D5C}" 
+                                 Margin="18,0"/>
 
+                        <!-- Location -->
                         <Grid Padding="18,14" ColumnDefinitions="*,Auto">
                             <VerticalStackLayout VerticalOptions="Center">
-                                <Label Text="📍 Location" FontSize="16" FontAttributes="Bold" TextColor="#1A1A2E"/>
-                                <Label Text="Find nearby restaurants" FontSize="12" TextColor="#6C757D" Margin="0,2,0,0"/>
+                                <Label Text="📍 Location" 
+                                       FontSize="{DynamicResource FontSizeSubtitle}" 
+                                       FontAttributes="Bold" 
+                                       TextColor="{AppThemeBinding Light=#1A1A2E, Dark=#F8F9FA}"/>
+                                <Label Text="Find nearby restaurants" 
+                                       FontSize="{DynamicResource FontSizeCaption}" 
+                                       TextColor="{AppThemeBinding Light=#6C757D, Dark=#ADB5BD}" 
+                                       Margin="0,2,0,0"/>
                             </VerticalStackLayout>
                             <Switch Grid.Column="1" VerticalOptions="Center"
                                     OnColor="#4CAF50" ThumbColor="White"
                                     IsToggled="True"/>
                         </Grid>
 
-                        <BoxView HeightRequest="1" BackgroundColor="#F1F3F5" Margin="18,0"/>
+                        <BoxView HeightRequest="1" 
+                                 BackgroundColor="{AppThemeBinding Light=#F1F3F5, Dark=#3D3D5C}" 
+                                 Margin="18,0"/>
 
+                        <!-- Microphone -->
                         <Grid Padding="18,14" ColumnDefinitions="*,Auto">
                             <VerticalStackLayout VerticalOptions="Center">
-                                <Label Text="🎤 Microphone" FontSize="16" FontAttributes="Bold" TextColor="#1A1A2E"/>
-                                <Label Text="Voice commands support" FontSize="12" TextColor="#6C757D" Margin="0,2,0,0"/>
+                                <Label Text="🎤 Microphone" 
+                                       FontSize="{DynamicResource FontSizeSubtitle}" 
+                                       FontAttributes="Bold" 
+                                       TextColor="{AppThemeBinding Light=#1A1A2E, Dark=#F8F9FA}"/>
+                                <Label Text="Voice commands support" 
+                                       FontSize="{DynamicResource FontSizeCaption}" 
+                                       TextColor="{AppThemeBinding Light=#6C757D, Dark=#ADB5BD}" 
+                                       Margin="0,2,0,0"/>
                             </VerticalStackLayout>
                             <Switch Grid.Column="1" VerticalOptions="Center"
                                     OnColor="#4CAF50" ThumbColor="White"/>
                         </Grid>
 
-                        <BoxView HeightRequest="1" BackgroundColor="#F1F3F5" Margin="18,0"/>
+                        <BoxView HeightRequest="1" 
+                                 BackgroundColor="{AppThemeBinding Light=#F1F3F5, Dark=#3D3D5C}" 
+                                 Margin="18,0"/>
 
+                        <!-- Vibration -->
                         <Grid Padding="18,14" ColumnDefinitions="*,Auto">
                             <VerticalStackLayout VerticalOptions="Center">
-                                <Label Text="📳 Vibration" FontSize="16" FontAttributes="Bold" TextColor="#1A1A2E"/>
-                                <Label Text="Haptic feedback on actions" FontSize="12" TextColor="#6C757D" Margin="0,2,0,0"/>
+                                <Label Text="📳 Vibration" 
+                                       FontSize="{DynamicResource FontSizeSubtitle}" 
+                                       FontAttributes="Bold" 
+                                       TextColor="{AppThemeBinding Light=#1A1A2E, Dark=#F8F9FA}"/>
+                                <Label Text="Haptic feedback on actions" 
+                                       FontSize="{DynamicResource FontSizeCaption}" 
+                                       TextColor="{AppThemeBinding Light=#6C757D, Dark=#ADB5BD}" 
+                                       Margin="0,2,0,0"/>
                             </VerticalStackLayout>
                             <Switch Grid.Column="1" VerticalOptions="Center"
                                     OnColor="#4CAF50" ThumbColor="White"
@@ -171,38 +247,65 @@
             <!-- ========== ABOUT SECTION ========== -->
             <VerticalStackLayout Spacing="4">
                 <Label Text="ℹ️ ABOUT" 
-                       FontSize="12" FontAttributes="Bold" 
+                       FontSize="{DynamicResource FontSizeCaption}" 
+                       FontAttributes="Bold" 
                        TextColor="#9C27B0" 
                        CharacterSpacing="2"
                        Margin="4,0,0,4"/>
 
                 <Frame CornerRadius="20" HasShadow="True" Padding="0" 
-                       BackgroundColor="White" BorderColor="Transparent">
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#2D2D44}" 
+                       BorderColor="Transparent">
                     <VerticalStackLayout>
 
+                        <!-- App Version -->
                         <Grid Padding="18,14" ColumnDefinitions="*,*">
-                            <Label Text="App Version" FontSize="16" TextColor="#1A1A2E" VerticalOptions="Center"/>
+                            <Label Text="App Version" 
+                                   FontSize="{DynamicResource FontSizeSubtitle}" 
+                                   TextColor="{AppThemeBinding Light=#1A1A2E, Dark=#F8F9FA}" 
+                                   VerticalOptions="Center"/>
                             <Label Grid.Column="1" Text="1.0.0" 
-                                   HorizontalOptions="End" FontSize="16" FontAttributes="Bold" 
-                                   TextColor="#FF6B35" VerticalOptions="Center"/>
+                                   HorizontalOptions="End" 
+                                   FontSize="{DynamicResource FontSizeSubtitle}" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#FF6B35" 
+                                   VerticalOptions="Center"/>
                         </Grid>
 
-                        <BoxView HeightRequest="1" BackgroundColor="#F1F3F5" Margin="18,0"/>
+                        <BoxView HeightRequest="1" 
+                                 BackgroundColor="{AppThemeBinding Light=#F1F3F5, Dark=#3D3D5C}" 
+                                 Margin="18,0"/>
 
+                        <!-- Developer -->
                         <Grid Padding="18,14" ColumnDefinitions="*,*">
-                            <Label Text="Developer" FontSize="16" TextColor="#1A1A2E" VerticalOptions="Center"/>
+                            <Label Text="Developer" 
+                                   FontSize="{DynamicResource FontSizeSubtitle}" 
+                                   TextColor="{AppThemeBinding Light=#1A1A2E, Dark=#F8F9FA}" 
+                                   VerticalOptions="Center"/>
                             <Label Grid.Column="1" Text="Mobile Computing" 
-                                   HorizontalOptions="End" FontSize="16" FontAttributes="Bold" 
-                                   TextColor="#9C27B0" VerticalOptions="Center"/>
+                                   HorizontalOptions="End" 
+                                   FontSize="{DynamicResource FontSizeSubtitle}" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#9C27B0" 
+                                   VerticalOptions="Center"/>
                         </Grid>
 
-                        <BoxView HeightRequest="1" BackgroundColor="#F1F3F5" Margin="18,0"/>
+                        <BoxView HeightRequest="1" 
+                                 BackgroundColor="{AppThemeBinding Light=#F1F3F5, Dark=#3D3D5C}" 
+                                 Margin="18,0"/>
 
+                        <!-- Made with -->
                         <Grid Padding="18,14" ColumnDefinitions="*,*">
-                            <Label Text="Made with" FontSize="16" TextColor="#1A1A2E" VerticalOptions="Center"/>
+                            <Label Text="Made with" 
+                                   FontSize="{DynamicResource FontSizeSubtitle}" 
+                                   TextColor="{AppThemeBinding Light=#1A1A2E, Dark=#F8F9FA}" 
+                                   VerticalOptions="Center"/>
                             <Label Grid.Column="1" Text="❤️ .NET MAUI" 
-                                   HorizontalOptions="End" FontSize="16" FontAttributes="Bold" 
-                                   TextColor="#FF4757" VerticalOptions="Center"/>
+                                   HorizontalOptions="End" 
+                                   FontSize="{DynamicResource FontSizeSubtitle}" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#FF4757" 
+                                   VerticalOptions="Center"/>
                         </Grid>
 
                     </VerticalStackLayout>
