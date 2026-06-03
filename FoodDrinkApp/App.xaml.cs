@@ -71,6 +71,10 @@ namespace FoodDrinkApp
                 resources["TextSecondaryColor"] = resources["TextSecondaryHighContrast"];
                 resources["BorderColor"] = resources["BorderHighContrast"];
                 resources["CurrentPrimaryColor"] = resources["PrimaryHighContrast"];
+                resources["SecondaryColor"] = resources["SecondaryHighContrast"];
+                resources["AccentColor"] = resources["AccentHighContrast"];
+                resources["DangerColor"] = resources["DangerHighContrast"];
+                resources["PurpleColor"] = resources["PurpleHighContrast"];
             }
             else if (Current.UserAppTheme == AppTheme.Dark)
             {
@@ -80,6 +84,10 @@ namespace FoodDrinkApp
                 resources["TextSecondaryColor"] = resources["TextSecondaryDark"];
                 resources["BorderColor"] = resources["BorderDark"];
                 resources["CurrentPrimaryColor"] = resources["PrimaryColor"];
+                resources["SecondaryColor"] = resources["SecondaryColor"];
+                resources["AccentColor"] = resources["AccentColor"];
+                resources["DangerColor"] = resources["DangerColor"];
+                resources["PurpleColor"] = resources["PurpleColor"];
             }
             else
             {
@@ -89,6 +97,10 @@ namespace FoodDrinkApp
                 resources["TextSecondaryColor"] = resources["TextSecondaryLight"];
                 resources["BorderColor"] = resources["BorderLight"];
                 resources["CurrentPrimaryColor"] = resources["PrimaryColor"];
+                resources["SecondaryColor"] = resources["SecondaryColor"];
+                resources["AccentColor"] = resources["AccentColor"];
+                resources["DangerColor"] = resources["DangerColor"];
+                resources["PurpleColor"] = resources["PurpleColor"];
             }
         }
     }

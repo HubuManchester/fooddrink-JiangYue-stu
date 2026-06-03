@@ -13,6 +13,9 @@
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-feature android:name="android.hardware.camera" android:required="false" />
 
+	<!-- ========== STORAGE PERMISSION FOR CAMERA (Android 10 and below) ========== -->
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+
 	<!-- ========== GPS/LOCATION PERMISSIONS ========== -->
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -28,10 +31,18 @@
 	<uses-feature android:name="android.hardware.camera.flash" android:required="false" />
 
 	<!-- ========== REQUIRED FOR ANDROID 11+ (API 30+) ========== -->
-	<!-- Allows the app to discover and interact with the camera app -->
+	<!-- Allows the app to discover and interact with camera and file picker apps -->
 	<queries>
 		<intent>
 			<action android:name="android.media.action.IMAGE_CAPTURE" />
+		</intent>
+		<intent>
+			<action android:name="android.intent.action.PICK" />
+			<data android:mimeType="*/*" />
+		</intent>
+		<intent>
+			<action android:name="android.intent.action.OPEN_DOCUMENT" />
+			<data android:mimeType="*/*" />
 		</intent>
 	</queries>
 

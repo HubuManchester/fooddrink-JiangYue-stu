@@ -1,18 +1,18 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <Shell x:Class="FoodDrinkApp.AppShell" 
        xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
-       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:views="clr-namespace:FoodDrinkApp.Views"
        Shell.FlyoutBehavior="Disabled" 
        Shell.NavBarHasShadow="True"
        Shell.NavBarIsVisible="True"
-       Shell.BackgroundColor="{AppThemeBinding Light=White, Dark=#1A1A2E}"
-       Shell.ForegroundColor="{AppThemeBinding Light=#FF6B35, Dark=#FF8C5A}"
-       Shell.TitleColor="{AppThemeBinding Light=#1A1A2E, Dark=#F8F9FA}"
-       Shell.UnselectedColor="{AppThemeBinding Light=#ADB5BD, Dark=#6C757D}"
-       Shell.TabBarBackgroundColor="{AppThemeBinding Light=White, Dark=#16213E}"
-       Shell.TabBarForegroundColor="{AppThemeBinding Light=#FF6B35, Dark=#FF8C5A}"
-       Shell.TabBarUnselectedColor="{AppThemeBinding Light=#ADB5BD, Dark=#6C757D}"
+       Shell.BackgroundColor="{DynamicResource CardColor}"
+       Shell.ForegroundColor="{DynamicResource CurrentPrimaryColor}"
+       Shell.TitleColor="{DynamicResource TextPrimaryColor}"
+       Shell.UnselectedColor="{DynamicResource TextSecondaryColor}"
+       Shell.TabBarBackgroundColor="{DynamicResource CardColor}"
+       Shell.TabBarForegroundColor="{DynamicResource CurrentPrimaryColor}"
+       Shell.TabBarUnselectedColor="{DynamicResource TextSecondaryColor}"
        Title="Food Finder">
 
     <!-- ========== Bottom Tab Bar with Emoji Icons ========== -->
@@ -25,7 +25,7 @@
                     Glyph="🏠"
                     FontFamily="Default"
                     Size="24"
-                    Color="{AppThemeBinding Light=#ADB5BD, Dark=#6C757D}"/>
+                    Color="{DynamicResource TextSecondaryColor}"/>
             </Tab.Icon>
             <ShellContent Route="HomePage" 
                           ContentTemplate="{DataTemplate views:HomePage}" />
@@ -38,7 +38,7 @@
                     Glyph="❤️"
                     FontFamily="Default"
                     Size="24"
-                    Color="{AppThemeBinding Light=#ADB5BD, Dark=#6C757D}"/>
+                    Color="{DynamicResource DangerColor}"/>
             </Tab.Icon>
             <ShellContent Route="FavoritesPage" 
                           ContentTemplate="{DataTemplate views:FavoritesPage}" />
@@ -51,7 +51,7 @@
                     Glyph="⚙️"
                     FontFamily="Default"
                     Size="24"
-                    Color="{AppThemeBinding Light=#ADB5BD, Dark=#6C757D}"/>
+                    Color="{DynamicResource TextSecondaryColor}"/>
             </Tab.Icon>
             <ShellContent Route="SettingsPage" 
                           ContentTemplate="{DataTemplate views:SettingsPage}" />

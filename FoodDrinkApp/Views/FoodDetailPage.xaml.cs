@@ -23,62 +23,31 @@ namespace FoodDrinkApp.Views
             _hardwareService = IPlatformApplication.Current?.Services?.GetService<IHardwareService>() ?? new HardwareService();
         }
 
-        // ========== PINCH TO ZOOM ==========
-        private void OnPinchUpdated(object sender, PinchGestureUpdatedEventArgs e)
+        private async void OnBackClicked(object sender, EventArgs e)
+        {
+            await Shell.Current.GoToAsync("..");
+        }
+
+        // ========== DOUBLE TAP TO ZOOM ==========
+        private void OnDoubleTapped(object sender, TappedEventArgs e)
         {
             if (FoodImage == null)
                 return;
 
-            if (e.Status == GestureStatus.Started)
+            _hardwareService?.Vibrate(20);
+
+            if (_currentScale > 1.0)
             {
-                _startScale = _currentScale;
+                // Zoom out
+                ResetImagePosition();
             }
-            else if (e.Status == GestureStatus.Running)
+            else
             {
-                _currentScale = _startScale * e.Scale;
-                _currentScale = Math.Max(1.0, Math.Min(_currentScale, 5.0));
-                
+                // Zoom in to 2.5x
+                _currentScale = 2.5;
                 FoodImage.Scale = _currentScale;
-            }
-            else if (e.Status == GestureStatus.Completed)
-            {
-                _hardwareService?.Vibrate(20);
-                
-                if (_currentScale <= 1.0)
-                {
-                    ResetImagePosition();
-                }
-            }
-        }
-
-        // ========== PAN TO MOVE ==========
-        private void OnPanUpdated(object sender, PanUpdatedEventArgs e)
-        {
-            if (FoodImage == null || _currentScale <= 1.0)
-                return;
-
-            if (e.StatusType == GestureStatus.Started)
-            {
-                _xOffset = _currentX;
-                _yOffset = _currentY;
-            }
-            else if (e.StatusType == GestureStatus.Running)
-            {
-                var newX = _xOffset + e.TotalX;
-                var newY = _yOffset + e.TotalY;
-                
-                var maxX = (FoodImage.Width * (_currentScale - 1)) / 2;
-                var maxY = (FoodImage.Height * (_currentScale - 1)) / 2;
-                
-                _currentX = Math.Max(-maxX, Math.Min(newX, maxX));
-                _currentY = Math.Max(-maxY, Math.Min(newY, maxY));
-                
-                FoodImage.TranslationX = _currentX;
-                FoodImage.TranslationY = _currentY;
-            }
-            else if (e.StatusType == GestureStatus.Completed)
-            {
-                _hardwareService?.Vibrate(20);
+                FoodImage.AnchorX = 0.5;
+                FoodImage.AnchorY = 0.5;
             }
         }
 
@@ -94,6 +63,10 @@ namespace FoodDrinkApp.Views
         }
 
         // ========== HARDWARE FEATURE 1: CAMERA ==========
+        /// <summary>
+        /// Captures a photo using the native camera API.
+        /// </summary>
+        /// <returns>The captured photo as FileResult, or null if cancelled.</returns>
         private async void OnCameraClicked(object sender, EventArgs e)
         {
             try
@@ -175,6 +148,15 @@ namespace FoodDrinkApp.Views
                     return;
                 }
 
+                // If currently speaking, stop
+                if (_hardwareService.IsSpeaking)
+                {
+                    _hardwareService.StopSpeaking();
+                    await DisplayAlert("🔇 Stopped", "Text-to-speech has been stopped.", "OK");
+                    return;
+                }
+
+                // Otherwise, start speaking
                 if (_foodItem != null)
                 {
                     var recipeText = $"{_foodItem.Name}. {_foodItem.Description}. " +
@@ -198,6 +180,43 @@ namespace FoodDrinkApp.Views
             catch (Exception ex)
             {
                 await DisplayAlert("TTS Error", ex.Message, "OK");
+            }
+        }
+
+        // ========== HARDWARE FEATURE 4: FLASHLIGHT ==========
+        private bool _isFlashlightOn = false;
+        private async void OnFlashlightClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                _hardwareService?.Vibrate(50);
+
+                if (_hardwareService == null)
+                {
+                    await DisplayAlert("Error", "Flashlight service not available", "OK");
+                    return;
+                }
+
+                _isFlashlightOn = !_isFlashlightOn;
+
+                if (_isFlashlightOn)
+                {
+                    await _hardwareService.TurnOnFlashlightAsync();
+                    await DisplayAlert("🔦 Flashlight On", 
+                        "Flashlight is now ON. Useful for cooking in low light!", 
+                        "OK");
+                }
+                else
+                {
+                    await _hardwareService.TurnOffFlashlightAsync();
+                    await DisplayAlert("🔦 Flashlight Off", 
+                        "Flashlight is now OFF.", 
+                        "OK");
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Flashlight Error", ex.Message, "OK");
             }
         }
     }

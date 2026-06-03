@@ -1,5 +1,6 @@
 using FoodDrinkApp.Models;
 using FoodDrinkApp.Services;
+using Microsoft.Maui.Media;
 using Microsoft.Maui.Storage;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -8,10 +9,23 @@ using System.Windows.Input;
 
 namespace FoodDrinkApp.ViewModels
 {
+    /// <summary>
+    /// ViewModel for the Home page that manages food items, search, filtering, 
+    /// favorites, and hardware feature interactions.
+    /// Implements INotifyPropertyChanged for data binding support.
+    /// </summary>
     public class HomeViewModel : INotifyPropertyChanged
     {
+        /// <summary>
+        /// Event raised when a property value changes.
+        /// </summary>
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        /// <summary>
+        /// Raises the PropertyChanged event.
+        /// </summary>
+        /// <param name="propertyName">The name of the property that changed. 
+        /// This is automatically provided by CallerMemberName.</param>
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -19,14 +33,21 @@ namespace FoodDrinkApp.ViewModels
 
         private readonly IHardwareService _hardwareService;
 
-        // Properties
+        // ========== Properties ==========
+
+        /// <summary>
+        /// Gets or sets the search text used to filter food items.
+        /// </summary>
         private string _searchText = string.Empty;
         public string SearchText
         {
             get => _searchText;
-            set { _searchText = value; OnPropertyChanged(); ApplyFilter(); }
+            set { _searchText = value; OnPropertyChanged(); ValidateSearchText(); }
         }
 
+        /// <summary>
+        /// Gets or sets the currently selected category filter.
+        /// </summary>
         private string _selectedCategory = "All";
         public string SelectedCategory
         {
@@ -76,6 +97,48 @@ namespace FoodDrinkApp.ViewModels
             set { _accelerometerZ = value; OnPropertyChanged(); }
         }
 
+        private bool _isLoading;
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set { _isLoading = value; OnPropertyChanged(); }
+        }
+
+        private string _loadingText = "Loading data...";
+        public string LoadingText
+        {
+            get => _loadingText;
+            set { _loadingText = value; OnPropertyChanged(); }
+        }
+
+        private string _errorMessage = string.Empty;
+        public string ErrorMessage
+        {
+            get => _errorMessage;
+            set { _errorMessage = value; OnPropertyChanged(); }
+        }
+
+        private bool _hasError;
+        public bool HasError
+        {
+            get => _hasError;
+            set { _hasError = value; OnPropertyChanged(); }
+        }
+
+        private bool _isSearchValid = true;
+        public bool IsSearchValid
+        {
+            get => _isSearchValid;
+            set { _isSearchValid = value; OnPropertyChanged(); }
+        }
+
+        private string _searchValidationMessage = string.Empty;
+        public string SearchValidationMessage
+        {
+            get => _searchValidationMessage;
+            set { _searchValidationMessage = value; OnPropertyChanged(); }
+        }
+
         public ObservableCollection<FoodItem> FoodItems { get; set; } = new();
         public ObservableCollection<FoodItem> FilteredItems { get; set; } = new();
 
@@ -94,12 +157,18 @@ namespace FoodDrinkApp.ViewModels
         public ICommand SpeakRecipeCommand { get; }
         public ICommand TakePhotoCommand { get; }
         public ICommand GetNearbyLocationCommand { get; }
+        public ICommand RefreshDataCommand { get; }
+        public ICommand DismissErrorCommand { get; }
+        public ICommand ToggleFlashlightCommand { get; }
 
         // Accelerometer fields
         private bool _isAccelerometerRunning;
         private const double ShakeThreshold = 2.5;
         private const int ShakeCooldownMilliseconds = 1500;
         private DateTime _lastShakeTime = DateTime.MinValue;
+
+        // Flashlight field
+        private bool _isFlashlightOn;
 
         public HomeViewModel(IHardwareService hardwareService)
         {
@@ -119,9 +188,84 @@ namespace FoodDrinkApp.ViewModels
             SpeakRecipeCommand = new Command(OnSpeakRecipe);
             TakePhotoCommand = new Command(OnTakePhoto);
             GetNearbyLocationCommand = new Command(OnGetNearbyLocation);
+            RefreshDataCommand = new Command(async () => await RefreshDataAsync());
+            DismissErrorCommand = new Command(OnDismissError);
+            ToggleFlashlightCommand = new Command(OnToggleFlashlight);
 
-            LoadSampleData();
-            LoadSavedFavorites();
+            // Initialize data asynchronously
+            Task.Run(async () => await InitializeDataAsync());
+        }
+
+        private async Task InitializeDataAsync()
+        {
+            IsLoading = true;
+            LoadingText = "Initializing data...";
+            
+            try
+            {
+                await Task.Delay(500); // Simulate network/database delay
+                LoadSampleData();
+                await LoadSavedFavoritesAsync();
+            }
+            catch (Exception ex)
+            {
+                ShowError($"Failed to load data: {ex.Message}");
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        private async Task RefreshDataAsync()
+        {
+            IsLoading = true;
+            LoadingText = "Refreshing data...";
+            
+            try
+            {
+                await Task.Delay(800); // Simulate refresh delay
+                FoodItems.Clear();
+                LoadSampleData();
+                await LoadSavedFavoritesAsync();
+                ApplyFilter();
+            }
+            catch (Exception ex)
+            {
+                ShowError($"Failed to refresh data: {ex.Message}");
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
+        private void ValidateSearchText()
+        {
+            if (string.IsNullOrWhiteSpace(SearchText))
+            {
+                IsSearchValid = false;
+                SearchValidationMessage = "Please enter search text";
+                // Always call ApplyFilter to restore all items
+                ApplyFilter();
+                return;
+            }
+
+            IsSearchValid = true;
+            SearchValidationMessage = string.Empty;
+            ApplyFilter();
+        }
+
+        private void ShowError(string message)
+        {
+            ErrorMessage = message;
+            HasError = true;
+        }
+
+        private void OnDismissError()
+        {
+            ErrorMessage = string.Empty;
+            HasError = false;
         }
 
         private void LoadSampleData()
@@ -306,13 +450,136 @@ namespace FoodDrinkApp.ViewModels
                 Ingredients = new List<string> { "White rum", "Fresh mint leaves", "Lime wedges", "Sugar or simple syrup", "Club soda", "Ice" }
             });
 
+            // ========== NEW FOOD ITEMS (8 additional) ==========
+
+            FoodItems.Add(new FoodItem
+            {
+                Id = 13,
+                Name = "Ramen",
+                Category = "Main Course",
+                Description = "Japanese noodle soup with rich broth, tender pork, and soft-boiled egg.",
+                Details = "Ramen originated from Chinese wheat noodles but was transformed into a distinctly Japanese dish. The broth can be tonkotsu (pork bone), shoyu (soy sauce), miso, or shio (salt) based.",
+                ImageFileName = "ramen",
+                PrepTimeMinutes = 240,
+                Calories = 450,
+                Origin = "Japan",
+                Rating = 4.9,
+                Ingredients = new List<string> { "Ramen noodles", "Pork belly (chashu)", "Soft-boiled egg", "Green onions", "Nori", "Bamboo shoots", "Corn", "Garlic", "Soy sauce" }
+            });
+
+            FoodItems.Add(new FoodItem
+            {
+                Id = 14,
+                Name = "Peking Duck",
+                Category = "Main Course",
+                Description = "Famous Chinese roast duck with crispy skin, served with pancakes and hoisin sauce.",
+                Details = "Peking Duck has been served in Beijing since the imperial era. The duck is specially bred and roasted in a closed oven, producing a glossy, crispy skin that's the hallmark of this dish.",
+                ImageFileName = "pekingduck",
+                PrepTimeMinutes = 180,
+                Calories = 380,
+                Origin = "China",
+                Rating = 4.8,
+                Ingredients = new List<string> { "Whole duck", "Hoisin sauce", "Scallions", "Cucumber", "Thin pancakes", "Five-spice powder", "Honey", "Soy sauce" }
+            });
+
+            FoodItems.Add(new FoodItem
+            {
+                Id = 15,
+                Name = "Hummus",
+                Category = "Appetizer",
+                Description = "Creamy Middle Eastern dip made from chickpeas, tahini, and olive oil.",
+                Details = "Hummus is one of the oldest known prepared foods, with origins dating back to ancient Egypt. It's a staple in Middle Eastern cuisine and has become popular worldwide as a healthy dip.",
+                ImageFileName = "hummus",
+                PrepTimeMinutes = 10,
+                Calories = 180,
+                Origin = "Lebanon",
+                Rating = 4.5,
+                Ingredients = new List<string> { "Chickpeas", "Tahini paste", "Olive oil", "Lemon juice", "Garlic", "Cumin", "Paprika", "Fresh parsley" }
+            });
+
+            FoodItems.Add(new FoodItem
+            {
+                Id = 16,
+                Name = "Fish and Chips",
+                Category = "Main Course",
+                Description = "Classic British dish of battered fried fish served with crispy chips.",
+                Details = "Fish and chips became popular in Britain in the 1860s. It was a cheap, filling meal for working-class families and remains Britain's most iconic takeaway dish.",
+                ImageFileName = "fishandchips",
+                PrepTimeMinutes = 30,
+                Calories = 520,
+                Origin = "United Kingdom",
+                Rating = 4.6,
+                Ingredients = new List<string> { "White fish (cod or haddock)", "Potatoes", "All-purpose flour", "Baking powder", "Beer", "Salt", "Malt vinegar", "Tartar sauce" }
+            });
+
+            FoodItems.Add(new FoodItem
+            {
+                Id = 17,
+                Name = "Korean BBQ",
+                Category = "Main Course",
+                Description = "Grilled marinated meat served with rice, kimchi, and various side dishes.",
+                Details = "Korean BBQ, or 'gogi-gui', is a popular dining experience where diners grill meat at their table. The meat is typically marinated in a sweet and savory sauce made with soy sauce, sugar, garlic, and sesame oil.",
+                ImageFileName = "koreanbbq",
+                PrepTimeMinutes = 60,
+                Calories = 480,
+                Origin = "South Korea",
+                Rating = 4.8,
+                Ingredients = new List<string> { "Marinated beef (bulgogi)", "Lettuce wraps", "Kimchi", "Steamed rice", "Garlic cloves", "Ssamjang sauce", "Sesame oil", "Soy sauce", "Sugar" }
+            });
+
+            FoodItems.Add(new FoodItem
+            {
+                Id = 18,
+                Name = "Cappuccino",
+                Category = "Drink",
+                Description = "Italian coffee drink with equal parts espresso, steamed milk, and foam.",
+                Details = "The cappuccino was invented in Italy in the early 1900s with the introduction of espresso machines. Named after Capuchin monks whose robes resembled the coffee's color.",
+                ImageFileName = "cappuccino",
+                PrepTimeMinutes = 5,
+                Calories = 120,
+                Origin = "Italy",
+                Rating = 4.7,
+                Ingredients = new List<string> { "Espresso shots", "Whole milk", "Cocoa powder", "Cinnamon", "Sugar" }
+            });
+
+            FoodItems.Add(new FoodItem
+            {
+                Id = 19,
+                Name = "Spring Rolls",
+                Category = "Appetizer",
+                Description = "Crispy Chinese fried rolls filled with vegetables and sometimes meat.",
+                Details = "Spring rolls originated in China and are traditionally eaten during the Spring Festival. The golden cylindrical shape symbolizes wealth bars, making them a lucky food.",
+                ImageFileName = "springrollsnew",
+                PrepTimeMinutes = 40,
+                Calories = 150,
+                Origin = "China",
+                Rating = 4.5,
+                Ingredients = new List<string> { "Spring roll wrappers", "Cabbage", "Carrots", "Bean sprouts", "Ground pork", "Shrimp", "Soy sauce", "Sesame oil", "Oil for frying" }
+            });
+
+            FoodItems.Add(new FoodItem
+            {
+                Id = 20,
+                Name = "Lamb Kebab",
+                Category = "Main Course",
+                Description = "Middle Eastern grilled skewers of marinated lamb with spices.",
+                Details = "Kebabs have been a staple of Middle Eastern cuisine for centuries. The method of grilling meat on skewers originated in Turkey and spread throughout the Ottoman Empire.",
+                ImageFileName = "lambkebab",
+                PrepTimeMinutes = 45,
+                Calories = 350,
+                Origin = "Turkey",
+                Rating = 4.7,
+                Ingredients = new List<string> { "Lamb leg or shoulder", "Onion", "Garlic", "Cumin", "Coriander", "Paprika", "Olive oil", "Lemon juice", "Fresh mint" }
+            });
+
             ApplyFilter();
         }
 
-        private void LoadSavedFavorites()
+        private async Task LoadSavedFavoritesAsync()
         {
             try
             {
+                await Task.Delay(100); // Simulate async storage
                 string favoritesJson = Preferences.Get("favorites", "[]");
                 var favoriteIds = System.Text.Json.JsonSerializer.Deserialize<List<int>>(favoritesJson) ?? new List<int>();
 
@@ -325,6 +592,12 @@ namespace FoodDrinkApp.ViewModels
             {
                 // Ignore errors loading favorites
             }
+        }
+
+        private void LoadSavedFavorites()
+        {
+            // Keep for backwards compatibility, but prefer async version
+            Task.Run(async () => await LoadSavedFavoritesAsync());
         }
 
         private void SaveFavorites()
@@ -357,10 +630,41 @@ namespace FoodDrinkApp.ViewModels
                 filtered = filtered.Where(item => item.IsFavorite);
             }
 
+            // Force UI update by creating new collection reference
+            var filteredList = filtered.ToList();
+            
             FilteredItems.Clear();
-            foreach (var item in filtered)
+            foreach (var item in filteredList)
             {
                 FilteredItems.Add(item);
+            }
+
+            // Notify that FilteredItems has changed
+            OnPropertyChanged(nameof(FilteredItems));
+
+            // Check if no results found and show appropriate message
+            if (FilteredItems.Count == 0)
+            {
+                if (!string.IsNullOrWhiteSpace(SearchText))
+                {
+                    ShowError($"No food items found matching '{SearchText}'. Try a different search term.");
+                }
+                else if (SelectedCategory != "All")
+                {
+                    ShowError($"No {SelectedCategory} items found.");
+                }
+                else if (ShowOnlyFavorites)
+                {
+                    ShowError("No favorite items found. Add some items to your favorites first!");
+                }
+            }
+            else
+            {
+                // Clear error if we have results
+                if (HasError)
+                {
+                    OnDismissError();
+                }
             }
         }
 
@@ -402,10 +706,13 @@ namespace FoodDrinkApp.ViewModels
         private void OnClearSearch()
         {
             SearchText = string.Empty;
+            ApplyFilter();
         }
 
         private void OnSelectCategory(string? category)
         {
+            // When selecting a category, exit favorites mode to show that category
+            ShowOnlyFavorites = false;
             SelectedCategory = category ?? "All";
         }
 
@@ -545,6 +852,15 @@ namespace FoodDrinkApp.ViewModels
         {
             IsMenuOpen = false;
 
+            // If currently speaking, stop
+            if (_hardwareService.IsSpeaking)
+            {
+                _hardwareService.StopSpeaking();
+                ShowAlert("TTS Stopped", "🔇 Text-to-speech stopped.");
+                return;
+            }
+
+            // Otherwise, start speaking
             if (FilteredItems.Any())
             {
                 var item = FilteredItems.First();
@@ -563,15 +879,42 @@ namespace FoodDrinkApp.ViewModels
 
             try
             {
+                // Check if camera is supported on this device
+                if (!MediaPicker.Default.IsCaptureSupported)
+                {
+                    ShowAlert("Camera Not Supported", "This device does not support camera capture.");
+                    return;
+                }
+
+                // Request camera permission for Android
+                var status = await Permissions.RequestAsync<Permissions.Camera>();
+                if (status != PermissionStatus.Granted)
+                {
+                    ShowAlert("Permission Required", "Camera permission is required to take photos. Please grant permission and try again.");
+                    return;
+                }
+
                 var photo = await _hardwareService.TakePhotoAsync();
                 if (photo != null)
                 {
                     ShowAlert("Photo Taken", "📷 Photo captured successfully!");
                 }
+                else
+                {
+                    ShowAlert("Camera Cancelled", "Photo capture was cancelled.");
+                }
             }
-            catch
+            catch (PermissionException)
             {
-                ShowAlert("Camera Error", "Unable to access camera.");
+                ShowAlert("Permission Denied", "Camera permission is required. Please grant camera permission in device settings.");
+            }
+            catch (FeatureNotSupportedException)
+            {
+                ShowAlert("Feature Not Supported", "Camera is not supported on this device.");
+            }
+            catch (Exception ex)
+            {
+                ShowAlert("Camera Error", $"Unable to access camera: {ex.Message}");
             }
         }
 
@@ -595,6 +938,31 @@ namespace FoodDrinkApp.ViewModels
             catch
             {
                 ShowAlert("Location Error", "Unable to access location services.");
+            }
+        }
+
+        private async void OnToggleFlashlight()
+        {
+            IsMenuOpen = false;
+
+            try
+            {
+                _isFlashlightOn = !_isFlashlightOn;
+
+                if (_isFlashlightOn)
+                {
+                    await _hardwareService.TurnOnFlashlightAsync();
+                    ShowAlert("🔦 Flashlight On", "Flashlight is now ON. Useful for cooking in low light!");
+                }
+                else
+                {
+                    await _hardwareService.TurnOffFlashlightAsync();
+                    ShowAlert("🔦 Flashlight Off", "Flashlight is now OFF.");
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowAlert("Flashlight Error", ex.Message);
             }
         }
 

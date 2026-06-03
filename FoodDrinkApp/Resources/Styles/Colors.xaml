@@ -28,10 +28,20 @@
     <Color x:Key="Gray900">#212121</Color>
     
     <!-- High Contrast Colors -->
+    <Color x:Key="PrimaryColor">#FF6B35</Color>
     <Color x:Key="PrimaryHighContrast">#FFD700</Color>
     <Color x:Key="BackgroundHighContrast">#000000</Color>
     <Color x:Key="SurfaceHighContrast">#000000</Color>
     <Color x:Key="CardHighContrast">#1A1A1A</Color>
     <Color x:Key="TextPrimaryHighContrast">#FFFFFF</Color>
     <Color x:Key="TextSecondaryHighContrast">#FFFF00</Color>
+    <Color x:Key="BorderHighContrast">#FFFFFF</Color>
+    <Color x:Key="BorderLight">#E1E1E1</Color>
+    <Color x:Key="BorderDark">#3D3D5C</Color>
+    <Color x:Key="BackgroundColor">#FAFAFA</Color>
+    <Color x:Key="CardColor">#FFFFFF</Color>
+    <Color x:Key="TextPrimaryColor">#212121</Color>
+    <Color x:Key="TextSecondaryColor">#757575</Color>
+    <Color x:Key="BorderColor">#E1E1E1</Color>
+    <Color x:Key="CurrentPrimaryColor">#FF6B35</Color>
 </ResourceDictionary>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FoodDrinkApp.Controls.SearchBarControl"
+             x:Name="ThisControl">
+
+    <ContentView.Content>
+        <Frame Padding="8" 
+               CornerRadius="24" 
+               HasShadow="True"
+               BackgroundColor="{AppThemeBinding Light=White, Dark=#2D2D44}"
+               BorderColor="{AppThemeBinding Light=#DEE2E6, Dark=#3D3D5C}">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Label Text="🔍" 
+                       FontSize="20" 
+                       VerticalOptions="Center"
+                       Margin="8,0"/>
+                
+                <Entry x:Name="SearchEntry"
+                       Grid.Column="1"
+                       Placeholder="Search food, cuisine..."
+                       Text="{Binding SearchText, Source={x:Reference ThisControl}}"
+                       FontSize="16"
+                       VerticalOptions="Center"
+                       BackgroundColor="Transparent"
+                       TextColor="{AppThemeBinding Light=#1A1A2E, Dark=#F8F9FA}"
+                       PlaceholderColor="{AppThemeBinding Light=#ADB5BD, Dark=#6C757D}"
+                       Completed="OnSearchCompleted"/>
+                
+                <Button x:Name="ClearButton"
+                        Grid.Column="2"
+                        Text="✕"
+                        Command="{Binding ClearCommand, Source={x:Reference ThisControl}}"
+                        BackgroundColor="Transparent"
+                        TextColor="{AppThemeBinding Light=#ADB5BD, Dark=#6C757D}"
+                        FontSize="20"
+                        WidthRequest="44"
+                        HeightRequest="44"
+                        IsVisible="{Binding ShowClearButton, Source={x:Reference ThisControl}}"
+                        Padding="0"
+                        Clicked="OnClearClicked"/>
+            </Grid>
+        </Frame>
+    </ContentView.Content>
+</ContentView>

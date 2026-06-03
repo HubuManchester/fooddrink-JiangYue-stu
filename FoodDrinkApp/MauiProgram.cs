@@ -21,10 +21,10 @@ namespace FoodDrinkApp
             // Register Hardware Service as Singleton
             builder.Services.AddSingleton<IHardwareService, HardwareService>();
 
-            // ★★★ 关键修改：ViewModel 注册为 Singleton（单例）★★★
+            // Singleton ViewModel registration
             builder.Services.AddSingleton<HomeViewModel>();
 
-            // Register Pages as Transient（每次创建新实例）
+            // Register Pages as Transient
             builder.Services.AddTransient<HomePage>();
             builder.Services.AddTransient<FavoritesPage>();
             builder.Services.AddTransient<FoodDetailPage>();

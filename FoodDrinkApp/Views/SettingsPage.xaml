@@ -6,7 +6,26 @@
              Padding="0">
 
     <ScrollView>
-        <VerticalStackLayout Spacing="16" Padding="16,16,16,24">
+        <VerticalStackLayout Spacing="0" Padding="0">
+
+            <!-- Header Section -->
+            <Frame Margin="0" Padding="16,50,16,24" CornerRadius="0" HasShadow="False" 
+                   BackgroundColor="#FF6B35">
+                <VerticalStackLayout Spacing="8">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="⚙️" FontSize="40" VerticalOptions="Center"/>
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="Settings" FontSize="28" FontAttributes="Bold" 
+                                   TextColor="White" LineHeight="1.1"/>
+                            <Label Text="Personalize your experience" FontSize="14" 
+                                   TextColor="#FFF3E0"/>
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Content Section -->
+            <VerticalStackLayout Spacing="16" Padding="16,16,16,24">
 
             <!-- ========== APPEARANCE SECTION ========== -->
             <VerticalStackLayout Spacing="4">
@@ -34,11 +53,8 @@
                                        TextColor="{AppThemeBinding Light=#6C757D, Dark=#ADB5BD}" 
                                        Margin="0,2,0,0"/>
                             </VerticalStackLayout>
-                            <Switch x:Name="DarkModeSwitch" 
-                                    Grid.Column="1" 
-                                    VerticalOptions="Center"
-                                    OnColor="#FF6B35"
-                                    ThumbColor="White"
+                            <Switch x:Name="DarkModeSwitch" Grid.Column="1" VerticalOptions="Center"
+                                    OnColor="#FF6B35" ThumbColor="White"
                                     Toggled="OnDarkModeToggled"/>
                         </Grid>
 
@@ -65,7 +81,6 @@
                             <Label Text="Adjust the text size throughout the app" 
                                    FontSize="{DynamicResource FontSizeCaption}" 
                                    TextColor="{AppThemeBinding Light=#6C757D, Dark=#ADB5BD}"/>
-
                             <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,4,0,0">
                                 <Label Text="A" 
                                        FontSize="{DynamicResource FontSizeBody}" 
@@ -312,6 +327,7 @@
                 </Frame>
             </VerticalStackLayout>
 
+            </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

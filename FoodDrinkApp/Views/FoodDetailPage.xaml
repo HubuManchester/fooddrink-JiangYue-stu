@@ -6,184 +6,272 @@
              x:Name="FoodDetailPageRoot"
              BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundLight}, Dark={StaticResource BackgroundDark}}">
 
-    <ScrollView>
-        <VerticalStackLayout Spacing="0">
+    <ScrollView Margin="0" Padding="0">
+        <VerticalStackLayout Spacing="0" Margin="0" Padding="0">
 
-            <!-- Image Section -->
-            <Frame Margin="0" Padding="0" CornerRadius="0" HasShadow="False" BackgroundColor="Transparent">
+            <!-- Image Section with Overlay -->
+            <Grid HeightRequest="320">
                 <Image x:Name="FoodImage"
                        Source="{Binding FoodItem.ImageFileName}" 
                        Aspect="AspectFill"
-                       HeightRequest="300">
+                       Margin="0">
                     <Image.GestureRecognizers>
-                        <PinchGestureRecognizer PinchUpdated="OnPinchUpdated"/>
-                        <PanGestureRecognizer PanUpdated="OnPanUpdated"/>
+                        <TapGestureRecognizer NumberOfTapsRequired="2" Tapped="OnDoubleTapped"/>
                     </Image.GestureRecognizers>
                 </Image>
-            </Frame>
+                
+                <!-- Gradient Overlay for better text visibility -->
+                <BoxView BackgroundColor="#00000044" 
+                         VerticalOptions="End" 
+                         HeightRequest="120"/>
+                
+                <!-- Food Name Overlay on Image -->
+                <VerticalStackLayout VerticalOptions="End" 
+                                     Padding="24,20" 
+                                     Spacing="4">
+                    <Label Text="{Binding FoodItem.Name}" 
+                           FontSize="32" 
+                           FontAttributes="Bold" 
+                           TextColor="White"
+                           Shadow="{Shadow Brush=Black, Offset='0,2', Radius=4, Opacity=0.5}"
+                           LineBreakMode="TailTruncation"/>
+                    <Label Text="{Binding FoodItem.Category}" 
+                           FontSize="16" 
+                           TextColor="#FFFFFFCC"
+                           FontAttributes="Bold"/>
+                </VerticalStackLayout>
+            </Grid>
 
             <!-- Content Section -->
-            <Frame Margin="0" Padding="0" CornerRadius="0" HasShadow="False" 
-                   BackgroundColor="{AppThemeBinding Light=White, Dark=#2D2D44}">
+            <Frame Margin="0,-20,0,0" Padding="0" CornerRadius="24" HasShadow="True" 
+                   BackgroundColor="{AppThemeBinding Light=White, Dark=#2D2D44}"
+                   BorderColor="{AppThemeBinding Light=#F1F3F5, Dark=#3D3D5C}">
                 <VerticalStackLayout Spacing="0">
 
-                    <!-- Header Info -->
-                    <VerticalStackLayout Padding="24,24,24,0" Spacing="0">
-                        <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
-                            <Label Text="{Binding FoodItem.Name}" 
-                                   FontSize="{DynamicResource FontSizeTitle}" FontAttributes="Bold" 
-                                   TextColor="{AppThemeBinding Light=#1A1A2E, Dark=#F8F9FA}"
-                                   LineBreakMode="TailTruncation"/>
-                            <Button Text="{Binding FoodItem.IsFavorite, Converter={StaticResource BoolToHeartConverter}}"
-                                    Command="{Binding ToggleFavoriteCommand}"
-                                    BackgroundColor="Transparent"
-                                    TextColor="{Binding FoodItem.IsFavorite, Converter={StaticResource BoolToColorConverter}}"
-                                    FontSize="{DynamicResource FontSizeLarge}"
-                                    WidthRequest="44" HeightRequest="44"
-                                    Padding="0"/>
-                        </HorizontalStackLayout>
-                        <Label Text="{Binding FoodItem.Category}" 
-                               FontSize="{DynamicResource FontSizeBody}" 
-                               TextColor="#FF6B35"
-                               Margin="0,6,0,0"/>
-                    </VerticalStackLayout>
-
                     <!-- Stats Cards Row -->
-                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8" Margin="20,16,20,0">
+                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="10" Margin="20,24,20,0">
                         <!-- Rating Card -->
                         <Frame Grid.Column="0" CornerRadius="16" Padding="0" 
-                               HasShadow="False" BackgroundColor="#FFF3E0" BorderColor="Transparent">
+                               HasShadow="True" 
+                               BackgroundColor="{AppThemeBinding Light=#FFF3E0, Dark=#2D2D44}" 
+                               BorderColor="{AppThemeBinding Light=#FFE0B2, Dark=#3D3D5C}">
                             <VerticalStackLayout Padding="12,10" Spacing="4" HorizontalOptions="Center">
-                                <Label Text="⭐" FontSize="{DynamicResource FontSizeSubtitle}" HorizontalOptions="Center"/>
+                                <Label Text="⭐" FontSize="20" HorizontalOptions="Center"/>
                                 <Label Text="{Binding FoodItem.Rating, StringFormat='{}{0:F1}'}" 
-                                       FontSize="{DynamicResource FontSizeTitle}" FontAttributes="Bold" 
+                                       FontSize="18" FontAttributes="Bold" 
                                        TextColor="#FF6B35" HorizontalOptions="Center"/>
-                                <Label Text="Rating" FontSize="{DynamicResource FontSizeMicro}" TextColor="#BF7B50" HorizontalOptions="Center"/>
+                                <Label Text="Rating" FontSize="11" TextColor="#BF7B50" HorizontalOptions="Center"/>
                             </VerticalStackLayout>
                         </Frame>
 
                         <!-- Prep Time Card -->
                         <Frame Grid.Column="1" CornerRadius="16" Padding="0" 
-                               HasShadow="False" BackgroundColor="#E3F2FD" BorderColor="Transparent">
+                               HasShadow="True" 
+                               BackgroundColor="{AppThemeBinding Light=#E3F2FD, Dark=#2D2D44}" 
+                               BorderColor="{AppThemeBinding Light=#BBDEFB, Dark=#3D3D5C}">
                             <VerticalStackLayout Padding="12,10" Spacing="4" HorizontalOptions="Center">
-                                <Label Text="⏱️" FontSize="{DynamicResource FontSizeSubtitle}" HorizontalOptions="Center"/>
+                                <Label Text="⏱️" FontSize="20" HorizontalOptions="Center"/>
                                 <Label Text="{Binding FoodItem.PrepTimeMinutes, StringFormat='{}{0}'}" 
-                                       FontSize="{DynamicResource FontSizeTitle}" FontAttributes="Bold" 
+                                       FontSize="18" FontAttributes="Bold" 
                                        TextColor="#1976D2" HorizontalOptions="Center"/>
-                                <Label Text="min" FontSize="{DynamicResource FontSizeMicro}" TextColor="#64B5F6" HorizontalOptions="Center"/>
+                                <Label Text="min" FontSize="11" TextColor="#64B5F6" HorizontalOptions="Center"/>
                             </VerticalStackLayout>
                         </Frame>
 
                         <!-- Calories Card -->
                         <Frame Grid.Column="2" CornerRadius="16" Padding="0" 
-                               HasShadow="False" BackgroundColor="#E8F5E9" BorderColor="Transparent">
+                               HasShadow="True" 
+                               BackgroundColor="{AppThemeBinding Light=#E8F5E9, Dark=#2D2D44}" 
+                               BorderColor="{AppThemeBinding Light=#C8E6C9, Dark=#3D3D5C}">
                             <VerticalStackLayout Padding="12,10" Spacing="4" HorizontalOptions="Center">
-                                <Label Text="🔥" FontSize="{DynamicResource FontSizeSubtitle}" HorizontalOptions="Center"/>
+                                <Label Text="🔥" FontSize="20" HorizontalOptions="Center"/>
                                 <Label Text="{Binding FoodItem.Calories}" 
-                                       FontSize="{DynamicResource FontSizeTitle}" FontAttributes="Bold" 
+                                       FontSize="18" FontAttributes="Bold" 
                                        TextColor="#388E3C" HorizontalOptions="Center"/>
-                                <Label Text="kcal" FontSize="{DynamicResource FontSizeMicro}" TextColor="#81C784" HorizontalOptions="Center"/>
+                                <Label Text="kcal" FontSize="11" TextColor="#81C784" HorizontalOptions="Center"/>
                             </VerticalStackLayout>
                         </Frame>
 
                         <!-- Origin Card -->
                         <Frame Grid.Column="3" CornerRadius="16" Padding="0" 
-                               HasShadow="False" BackgroundColor="#F3E5F5" BorderColor="Transparent">
+                               HasShadow="True" 
+                               BackgroundColor="{AppThemeBinding Light=#F3E5F5, Dark=#2D2D44}" 
+                               BorderColor="{AppThemeBinding Light=#E1BEE7, Dark=#3D3D5C}">
                             <VerticalStackLayout Padding="12,10" Spacing="4" HorizontalOptions="Center">
-                                <Label Text="🌍" FontSize="{DynamicResource FontSizeSubtitle}" HorizontalOptions="Center"/>
+                                <Label Text="🌍" FontSize="20" HorizontalOptions="Center"/>
                                 <Label Text="{Binding FoodItem.Origin}" 
-                                       FontSize="{DynamicResource FontSizeCaption}" FontAttributes="Bold" 
+                                       FontSize="13" FontAttributes="Bold" 
                                        TextColor="#7B1FA2" HorizontalOptions="Center"
                                        LineBreakMode="TailTruncation"/>
-                                <Label Text="Origin" FontSize="{DynamicResource FontSizeMicro}" TextColor="#CE93D8" HorizontalOptions="Center"/>
+                                <Label Text="Origin" FontSize="11" TextColor="#CE93D8" HorizontalOptions="Center"/>
                             </VerticalStackLayout>
                         </Frame>
                     </Grid>
 
                     <!-- Description Section -->
-                    <VerticalStackLayout Padding="24,20,24,0" Spacing="8">
-                        <HorizontalStackLayout Spacing="8">
-                            <BoxView WidthRequest="4" CornerRadius="2" BackgroundColor="#FF6B35" VerticalOptions="Fill"/>
-                            <Label Text="About this dish" FontSize="{DynamicResource FontSizeSubtitle}" FontAttributes="Bold" 
+                    <VerticalStackLayout Padding="24,24,24,0" Spacing="10">
+                        <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                            <Frame BackgroundColor="#FF6B35" 
+                                   CornerRadius="8" 
+                                   Padding="8,4" 
+                                   HasShadow="False">
+                                <Label Text="📝" FontSize="16"/>
+                            </Frame>
+                            <Label Text="About this dish" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold" 
                                    TextColor="{AppThemeBinding Light=#1A1A2E, Dark=#F8F9FA}"/>
                         </HorizontalStackLayout>
-                        <Label Text="{Binding FoodItem.Description}" 
-                               FontSize="{DynamicResource FontSizeBody}" LineBreakMode="WordWrap" 
-                               TextColor="{AppThemeBinding Light=#495057, Dark=#ADB5BD}" LineHeight="1.5"/>
+                        <Frame CornerRadius="12" 
+                               Padding="16" 
+                               HasShadow="False" 
+                               BackgroundColor="{AppThemeBinding Light=#FAFAFA, Dark=#1A1A2E}"
+                               BorderColor="{AppThemeBinding Light=#EEEEEE, Dark=#3D3D5C}">
+                            <Label Text="{Binding FoodItem.Description}" 
+                                   FontSize="15" 
+                                   LineBreakMode="WordWrap" 
+                                   TextColor="{AppThemeBinding Light=#495057, Dark=#ADB5BD}" 
+                                   LineHeight="1.6"/>
+                        </Frame>
                     </VerticalStackLayout>
 
                     <!-- Details Section -->
-                    <VerticalStackLayout Padding="24,20,24,0" Spacing="8">
-                        <HorizontalStackLayout Spacing="8">
-                            <BoxView WidthRequest="4" CornerRadius="2" BackgroundColor="#2196F3" VerticalOptions="Fill"/>
-                            <Label Text="Cooking Tips &amp; History" FontSize="{DynamicResource FontSizeSubtitle}" FontAttributes="Bold" 
+                    <VerticalStackLayout Padding="24,20,24,0" Spacing="10">
+                        <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                            <Frame BackgroundColor="#2196F3" 
+                                   CornerRadius="8" 
+                                   Padding="8,4" 
+                                   HasShadow="False">
+                                <Label Text="👨‍🍳" FontSize="16"/>
+                            </Frame>
+                            <Label Text="Cooking Tips &amp; History" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold" 
                                    TextColor="{AppThemeBinding Light=#1A1A2E, Dark=#F8F9FA}"/>
                         </HorizontalStackLayout>
-                        <Frame CornerRadius="16" Padding="16" 
+                        <Frame CornerRadius="12" 
+                               Padding="16" 
                                HasShadow="False" 
-                               BackgroundColor="{AppThemeBinding Light=#F0F7FF, Dark=#1A2744}" 
-                               BorderColor="Transparent">
+                               BackgroundColor="{AppThemeBinding Light=#E3F2FD, Dark=#1A2744}"
+                               BorderColor="{AppThemeBinding Light=#BBDEFB, Dark=#3D3D5C}">
                             <Label Text="{Binding FoodItem.Details}" 
-                                   FontSize="{DynamicResource FontSizeBody}" LineBreakMode="WordWrap" 
-                                   TextColor="{AppThemeBinding Light=#34495E, Dark=#ADB5BD}" LineHeight="1.6"/>
+                                   FontSize="15" 
+                                   LineBreakMode="WordWrap" 
+                                   TextColor="{AppThemeBinding Light=#1565C0, Dark=#90CAF9}" 
+                                   LineHeight="1.6"/>
                         </Frame>
                     </VerticalStackLayout>
 
                     <!-- Ingredients Section -->
-                    <VerticalStackLayout Padding="24,20,24,0" Spacing="8">
-                        <HorizontalStackLayout Spacing="8">
-                            <BoxView WidthRequest="4" CornerRadius="2" BackgroundColor="#4CAF50" VerticalOptions="Fill"/>
-                            <Label Text="Ingredients" FontSize="{DynamicResource FontSizeSubtitle}" FontAttributes="Bold" 
+                    <VerticalStackLayout Padding="24,20,24,0" Spacing="10">
+                        <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                            <Frame BackgroundColor="#4CAF50" 
+                                   CornerRadius="8" 
+                                   Padding="8,4" 
+                                   HasShadow="False">
+                                <Label Text="🥗" FontSize="16"/>
+                            </Frame>
+                            <Label Text="Ingredients" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold" 
                                    TextColor="{AppThemeBinding Light=#1A1A2E, Dark=#F8F9FA}"/>
                         </HorizontalStackLayout>
-                        <Frame CornerRadius="16" Padding="12" 
+                        <Frame CornerRadius="12" 
+                               Padding="16" 
                                HasShadow="False" 
-                               BackgroundColor="{AppThemeBinding Light=#F1F8E9, Dark=#1A2E1A}" 
-                               BorderColor="Transparent">
-                            <CollectionView ItemsSource="{Binding FoodItem.Ingredients}" 
-                                            SelectionMode="None" 
-                                            BackgroundColor="Transparent"
-                                            Margin="0">
-                                <CollectionView.ItemTemplate>
+                               BackgroundColor="{AppThemeBinding Light=#E8F5E9, Dark=#1A2E1A}"
+                               BorderColor="{AppThemeBinding Light=#C8E6C9, Dark=#3D3D5C}">
+                            <FlexLayout Direction="Row" 
+                                        Wrap="Wrap" 
+                                        JustifyContent="Start"
+                                        AlignItems="Start"
+                                        BindableLayout.ItemsSource="{Binding FoodItem.Ingredients}">
+                                <BindableLayout.ItemTemplate>
                                     <DataTemplate x:DataType="x:String">
-                                        <HorizontalStackLayout Spacing="12" Padding="4,0">
-                                            <Label Text="•" FontSize="{DynamicResource FontSizeSubtitle}" TextColor="#4CAF50" VerticalOptions="Center"/>
-                                            <Label Text="{Binding}" 
-                                                   FontSize="{DynamicResource FontSizeBody}" 
-                                                   TextColor="{AppThemeBinding Light=#1A1A2E, Dark=#F8F9FA}"
-                                                   VerticalOptions="Center"/>
-                                        </HorizontalStackLayout>
+                                        <Frame CornerRadius="20" 
+                                               Padding="12,6" 
+                                               Margin="4" 
+                                               HasShadow="False"
+                                               BackgroundColor="{AppThemeBinding Light=White, Dark=#2D2D44}"
+                                               BorderColor="{AppThemeBinding Light=#4CAF50, Dark=#4CAF50}">
+                                            <HorizontalStackLayout Spacing="6">
+                                                <Label Text="✓" 
+                                                       FontSize="14" 
+                                                       TextColor="#4CAF50" 
+                                                       FontAttributes="Bold"/>
+                                                <Label Text="{Binding}" 
+                                                       FontSize="14" 
+                                                       TextColor="{AppThemeBinding Light=#2E7D32, Dark=#81C784}"
+                                                       FontAttributes="Bold"/>
+                                            </HorizontalStackLayout>
+                                        </Frame>
                                     </DataTemplate>
-                                </CollectionView.ItemTemplate>
-                            </CollectionView>
+                                </BindableLayout.ItemTemplate>
+                            </FlexLayout>
                         </Frame>
                     </VerticalStackLayout>
 
                     <!-- Action Buttons -->
-                    <VerticalStackLayout Padding="24,24,24,20" Spacing="12">
+                    <VerticalStackLayout Padding="24,28,24,24" Spacing="14">
+                        <!-- Camera Button -->
                         <Button Text="📷  Take a Photo" 
                                 Clicked="OnCameraClicked"
                                 BackgroundColor="#FF6B35" 
                                 TextColor="White"
-                                FontSize="{DynamicResource FontSizeSubtitle}" FontAttributes="Bold"
-                                HeightRequest="52" CornerRadius="16"
-                                Padding="0"/>
+                                FontSize="16" 
+                                FontAttributes="Bold"
+                                HeightRequest="54" 
+                                CornerRadius="16"
+                                Padding="0">
+                            <Button.Shadow>
+                                <Shadow Brush="#FF6B3566" Offset="0,4" Radius="8" Opacity="0.3"/>
+                            </Button.Shadow>
+                        </Button>
 
+                        <!-- Flashlight Button -->
+                        <Button Text="🔦  Toggle Flashlight" 
+                                Clicked="OnFlashlightClicked"
+                                BackgroundColor="#FF9800" 
+                                TextColor="White"
+                                FontSize="16"
+                                FontAttributes="Bold"
+                                HeightRequest="54" 
+                                CornerRadius="16"
+                                Padding="0">
+                            <Button.Shadow>
+                                <Shadow Brush="#FF980066" Offset="0,4" Radius="8" Opacity="0.3"/>
+                            </Button.Shadow>
+                        </Button>
+
+                        <!-- Location Button -->
                         <Button Text="📍  Find Nearby Restaurants" 
                                 Clicked="OnLocationClicked"
                                 BackgroundColor="#2196F3" 
                                 TextColor="White"
-                                FontSize="{DynamicResource FontSizeSubtitle}"
-                                HeightRequest="52" CornerRadius="16"
-                                Padding="0"/>
+                                FontSize="16"
+                                FontAttributes="Bold"
+                                HeightRequest="54" 
+                                CornerRadius="16"
+                                Padding="0">
+                            <Button.Shadow>
+                                <Shadow Brush="#2196F366" Offset="0,4" Radius="8" Opacity="0.3"/>
+                            </Button.Shadow>
+                        </Button>
 
+                        <!-- Speak Button -->
                         <Button Text="🔊  Read Recipe Aloud" 
                                 Clicked="OnSpeakClicked"
                                 BackgroundColor="#9C27B0" 
                                 TextColor="White"
-                                FontSize="{DynamicResource FontSizeSubtitle}"
-                                HeightRequest="52" CornerRadius="16"
-                                Padding="0"/>
+                                FontSize="16"
+                                FontAttributes="Bold"
+                                HeightRequest="54" 
+                                CornerRadius="16"
+                                Padding="0">
+                            <Button.Shadow>
+                                <Shadow Brush="#9C27B066" Offset="0,4" Radius="8" Opacity="0.3"/>
+                            </Button.Shadow>
+                        </Button>
                     </VerticalStackLayout>
                 </VerticalStackLayout>
             </Frame>
